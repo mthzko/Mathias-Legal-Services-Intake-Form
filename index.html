@@ -669,6 +669,10 @@
         <button type="button" id="copyBtn">Copy JSON</button>
         <button type="button" id="downloadBtn">Download .json</button>
         <button type="button" id="mailtoBtn">Email JSON (mailto)</button>
+        <button type="button" id="webhookBtn">Send to Discord</button>
+        <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
+          <input type="checkbox" id="autoWebhook" /> Auto-send on submit
+        </label>
         <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
       </div>
       <pre id="output">{ "status": "Not submitted yet." }</pre>
@@ -746,6 +750,52 @@
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+    }
+
+    // Discord webhook (CLIENT-SIDE WARNING: please don't abuse this volnerability inspect element wizards)
+    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1467289266391613472/iWFehe7bhU6W8x6ZOt6BlAcLzyUO3H32Ia4yj2-5GO_UOVvVYFWxLk6Q1ZbaNgDi770m";
+
+    async function sendToDiscordWebhook(payloadObj, filenameBase, contextLabel, statusEl) {
+      if (!DISCORD_WEBHOOK_URL) {
+        show(statusEl, "Discord webhook not configured. Ask Mathias to paste the webhook URL into the site code.");
+        statusEl.classList.remove("success");
+        statusEl.classList.add("error");
+        statusEl.style.display = "block";
+        return;
+      }
+
+      try {
+        const json = JSON.stringify(payloadObj, null, 2);
+        const fileBlob = new Blob([json], { type: "application/json" });
+
+        const form = new FormData();
+
+        // Small message for the channel
+        const content = `${contextLabel} submission received: ${filenameBase}`;
+        form.append("payload_json", JSON.stringify({ content }));
+
+        // Attach the JSON as a file so we don't fight the 2000 char limit
+        form.append("files[0]", fileBlob, `${filenameBase}.json`);
+
+        const res = await fetch(DISCORD_WEBHOOK_URL, {
+          method: "POST",
+          body: form
+        });
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(`Discord webhook failed (${res.status}). ${text}`);
+        }
+
+        // Success feedback
+        statusEl.classList.remove("error");
+        statusEl.classList.add("success");
+        show(statusEl, "Sent to Discord.");
+      } catch (err) {
+        statusEl.classList.remove("success");
+        statusEl.classList.add("error");
+        show(statusEl, `Discord send failed: ${err.message}`);
+      }
     }
 
     // Init
@@ -875,8 +925,10 @@ $("#defResetBtn").addEventListener("click", () => {
 
     // Submit
     let lastSubmission = null;
+    let lastPayload = null;
+    let lastPayloadLabel = null;
 
-    $("#intakeForm").addEventListener("submit", (ev) => {
+    $("#intakeForm").addEventListener("submit", async (ev) => {
       ev.preventDefault();
       hide($("#errorBox"));
       hide($("#successBox"));
@@ -982,13 +1034,22 @@ $("#defResetBtn").addEventListener("click", () => {
       const json = JSON.stringify(lastSubmission, null, 2);
       $("#output").textContent = json;
 
-      show($("#successBox"), "Submitted. Copy the JSON and send it to your lawyer (or post it dramatically in court).");
+      // Track last payload for manual webhook send
+      lastPayload = lastSubmission;
+      lastPayloadLabel = "Plaintiff";
+
+      show($("#successBox"), "Submitted. Copy the JSON, download it, or send it to Discord.");
+
+      // Auto-send to Discord if enabled
+      if ($("#autoWebhook").checked) {
+        await sendToDiscordWebhook(lastSubmission, caseId, "Plaintiff", $("#successBox"));
+      }
     });
 
     // Defendant submit
 let lastDefense = null;
 
-$("#defendantForm").addEventListener("submit", (ev) => {
+$("#defendantForm").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   hide($("#defErrorBox"));
   hide($("#defSuccessBox"));
@@ -1074,17 +1135,54 @@ $("#defendantForm").addEventListener("submit", (ev) => {
   };
 
   $("#output").textContent = JSON.stringify(lastDefense, null, 2);
-  show($("#defSuccessBox"), "Submitted. Copy the JSON and send it to your lawyer (or your therapist).");
+
+  // Track last payload for manual webhook send
+  lastPayload = lastDefense;
+  lastPayloadLabel = "Defendant";
+
+  show($("#defSuccessBox"), "Submitted. Copy the JSON, download it, or send it to Discord.");
+
+  // Auto-send to Discord if enabled
+  if ($("#autoWebhook").checked) {
+    await sendToDiscordWebhook(lastDefense, recordId, "Defendant", $("#defSuccessBox"));
+  }
 });
+
+    // Manual send to Discord
+    $("#webhookBtn").addEventListener("click", async () => {
+      // Decide which status box to use based on which form is currently visible
+      const plaintiffVisible = $("#intakeForm").style.display !== "none";
+      const statusEl = plaintiffVisible ? $("#successBox") : $("#defSuccessBox");
+
+      hide($("#errorBox"));
+      hide($("#defErrorBox"));
+
+      if (!lastPayload) {
+        show(statusEl, "Nothing to send yet. Submit a form first.");
+        statusEl.classList.remove("success");
+        statusEl.classList.add("error");
+        statusEl.style.display = "block";
+        return;
+      }
+
+      // Use the current Case ID pill if it looks like one, otherwise generate a filename
+      const pillId = $("#caseId").textContent;
+      const filenameBase = pillId && pillId !== "Not submitted" ? pillId : randomId();
+
+      await sendToDiscordWebhook(lastPayload, filenameBase, lastPayloadLabel || "Submission", statusEl);
+    });
 
     // Copy/download/mailto buttons
     $("#copyBtn").addEventListener("click", async () => {
       const text = $("#output").textContent;
+      const plaintiffVisible = $("#intakeForm").style.display !== "none";
+      const okEl = plaintiffVisible ? $("#successBox") : $("#defSuccessBox");
+      const badEl = plaintiffVisible ? $("#errorBox") : $("#defErrorBox");
       try{
         await navigator.clipboard.writeText(text);
-        show($("#successBox"), "Copied to clipboard.");
+        show(okEl, "Copied to clipboard.");
       }catch(e){
-        show($("#errorBox"), "Copy failed. Select the JSON and copy manually like it’s 2009.");
+        show(badEl, "Copy failed. Select the JSON and copy manually like it’s 2009.");
       }
     });
 
@@ -1092,7 +1190,8 @@ $("#defendantForm").addEventListener("submit", (ev) => {
       const text = $("#output").textContent;
       const id = $("#caseId").textContent.includes("VR-") ? $("#caseId").textContent : "vinterra-case";
       downloadText(`${id}.json`, text);
-      show($("#successBox"), "Downloaded JSON file.");
+      const plaintiffVisible = $("#intakeForm").style.display !== "none";
+      show(plaintiffVisible ? $("#successBox") : $("#defSuccessBox"), "Downloaded JSON file.");
     });
 
     $("#mailtoBtn").addEventListener("click", () => {
@@ -1101,6 +1200,8 @@ $("#defendantForm").addEventListener("submit", (ev) => {
       const subject = encodeURIComponent(`Vinterra SMP Legal Intake – ${id}`);
       const body = encodeURIComponent(text);
       // Note: mailto has length limits. Works best for smaller submissions.
+      const plaintiffVisible = $("#intakeForm").style.display !== "none";
+      show(plaintiffVisible ? $("#successBox") : $("#defSuccessBox"), "Opening your email client…");
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
     });
   </script>
