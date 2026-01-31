@@ -276,7 +276,7 @@
     </header>
 
     <form id="intakeForm" novalidate>
-      <!-- SECTION 1 -->
+      <!-- Section 1: Client info -->
       <div class="section">
         <h2>Section 1: Client Information <span>(who is complaining)</span></h2>
         <div class="grid two">
@@ -307,7 +307,7 @@
         </div>
       </div>
 
-      <!-- SECTION 2 -->
+      <!-- Section 2: Defendant info -->
       <div class="section">
         <h2>Section 2: Defendant Information <span>(who you’re suing)</span></h2>
         <div class="grid two">
@@ -322,7 +322,7 @@
         </div>
       </div>
 
-      <!-- SECTION 3 -->
+      <!-- Section 3: Case type -->
       <div class="section">
         <h2>Section 3: Type of Case <span>(pick your poison)</span></h2>
         <div class="checks" id="caseTypes">
@@ -341,7 +341,7 @@
         <p class="small">You should select at least one. If you don’t, why are you here?</p>
       </div>
 
-      <!-- SECTION 4 -->
+      <!-- Section 4: Incident details -->
       <div class="section">
         <h2>Section 4: Incident Details <span>(what happened, where, when)</span></h2>
         <div class="grid three">
@@ -365,7 +365,7 @@
         </div>
       </div>
 
-      <!-- SECTION 5 -->
+      <!-- Section 5: Evidence -->
       <div class="section">
         <h2>Section 5: Evidence Submitted <span>(links beat vibes)</span></h2>
         <div class="checks">
@@ -392,7 +392,7 @@
         </div>
       </div>
 
-      <!-- SECTION 6 -->
+      <!-- Section 6: Witnesses -->
       <div class="section">
         <h2>Section 6: Witnesses <span>(people who saw it)</span></h2>
         <div>
@@ -405,7 +405,7 @@
         </div>
       </div>
 
-      <!-- SECTION 7 -->
+      <!-- Section 7: Damages / outcome -->
       <div class="section">
         <h2>Section 7: Damages & Desired Outcome <span>(what you want)</span></h2>
         <div>
@@ -430,14 +430,14 @@
         </div>
       </div>
 
-      <!-- SECTION 8 -->
+      <!-- Section 8: Extra notes -->
       <div class="section">
         <h2>Section 8: Additional Notes <span>(optional but helpful)</span></h2>
         <label for="notes">Anything else?</label>
         <textarea id="notes" name="notes" placeholder="Anything you think matters. Keep it relevant."></textarea>
       </div>
 
-      <!-- SECTION 9 -->
+      <!-- Section 9: Declaration -->
       <div class="section">
         <h2>Section 9: Declaration <span>(don’t lie)</span></h2>
         <div class="checks">
@@ -486,12 +486,12 @@
   </div>
 
   <script>
-    // ---------- helpers ----------
+    // Helpers
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
     function randomId() {
-      // "VR-" + date + random, because aesthetics matter more than accuracy apparently
+      // "VR-" + date + random. It's not serious, it just looks official.
       const d = new Date();
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -555,11 +555,11 @@
       URL.revokeObjectURL(url);
     }
 
-    // ---------- init ----------
+    // Init
     const evidenceList = $("#evidenceList");
     const witnessList = $("#witnessList");
 
-    // start with one input each (humans forget otherwise)
+    // Start with one input each (people forget otherwise)
     addListItem(evidenceList, "Evidence link or description...", "evidence");
     addListItem(witnessList, "Witness IGN...", "witness");
 
@@ -570,7 +570,7 @@
       addListItem(witnessList, "Witness IGN...", "witness");
     });
 
-    // toggle "Other" fields
+    // Toggle the "Other" fields
     $("#caseTypeOtherChk").addEventListener("change", (e) => {
       $("#caseTypeOther").disabled = !e.target.checked;
       if (!e.target.checked) $("#caseTypeOther").value = "";
@@ -584,21 +584,21 @@
       if (!e.target.checked) $("#remedyOther").value = "";
     });
 
-    // default sign date to today
+    // Default sign date to today
     $("#signDate").value = todayISO();
 
-    // reset
+    // Reset
     $("#resetBtn").addEventListener("click", () => {
       $("#intakeForm").reset();
       $("#signDate").value = todayISO();
 
-      // clear lists and add defaults
+      // Clear lists and add defaults
       evidenceList.innerHTML = "";
       witnessList.innerHTML = "";
       addListItem(evidenceList, "Evidence link or description...", "evidence");
       addListItem(witnessList, "Witness IGN...", "witness");
 
-      // disable "other" inputs again
+      // Disable "other" inputs again
       $("#caseTypeOther").disabled = true;
       $("#evidenceOther").disabled = true;
       $("#remedyOther").disabled = true;
@@ -609,7 +609,7 @@
       hide($("#successBox"));
     });
 
-    // submit
+    // Submit
     let lastSubmission = null;
 
     $("#intakeForm").addEventListener("submit", (ev) => {
@@ -617,7 +617,7 @@
       hide($("#errorBox"));
       hide($("#successBox"));
 
-      // basic validation
+      // Basic validation
       const required = ["clientIgn", "clientDiscord", "defendantIgn", "incidentDateStart", "incidentLocation", "incidentDescription", "damages", "signature", "signDate"];
       for (const id of required) {
         const el = document.getElementById(id);
@@ -675,7 +675,7 @@
         return;
       }
 
-      // build submission
+      // Build submission
       const caseId = randomId();
       $("#caseId").textContent = caseId;
 
@@ -721,7 +721,7 @@
       show($("#successBox"), "Submitted. Copy the JSON and send it to your lawyer (or post it dramatically in court).");
     });
 
-    // copy/download/mailto buttons
+    // Copy/download/mailto buttons
     $("#copyBtn").addEventListener("click", async () => {
       const text = $("#output").textContent;
       try{
@@ -744,7 +744,7 @@
       const id = $("#caseId").textContent.includes("VR-") ? $("#caseId").textContent : "vinterra-case";
       const subject = encodeURIComponent(`Vinterra SMP Legal Intake – ${id}`);
       const body = encodeURIComponent(text);
-      // NOTE: mailto has length limits. Works best for small-ish submissions.
+      // Note: mailto has length limits. Works best for smaller submissions.
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
     });
   </script>
