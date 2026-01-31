@@ -270,9 +270,18 @@
           “They were being weird” is not evidence. As long as it's not Taco.
         </p>
       </div>
-      <div class="pill" id="casePill" title="Generated on submit">
-        Case ID: <b id="caseId">Not submitted</b>
-      </div>
+ <div class="row" style="justify-content:flex-end; gap:10px;">
+  <button type="button" id="tabPlaintiff" class="primary" style="padding:8px 12px; border-radius:999px;">
+    I want to sue
+  </button>
+  <button type="button" id="tabDefendant" style="padding:8px 12px; border-radius:999px;">
+    I got sued
+  </button>
+
+  <div class="pill" id="casePill" title="Generated on submit">
+    Case ID: <b id="caseId">Not submitted</b>
+  </div>
+</div>
     </header>
 
     <form id="intakeForm" novalidate>
@@ -470,6 +479,190 @@
       </div>
     </form>
 
+    <form id="defendantForm" novalidate style="display:none; margin-top:16px;">
+  <!-- DEFENDANT FORM: Section 1 -->
+  <div class="section">
+    <h2>Section 1: Defendant Information <span>(hi, yes, you’re being sued)</span></h2>
+    <div class="grid two">
+      <div>
+        <label for="defIgn">Your IGN *</label>
+        <input id="defIgn" name="defIgn" type="text" placeholder="e.g., TotallyInnocent" required />
+      </div>
+      <div>
+        <label for="defDiscord">Your Discord *</label>
+        <input id="defDiscord" name="defDiscord" type="text" placeholder="e.g., @defendant" required />
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top:12px;">
+      <div>
+        <label for="servedDate">Date you were served *</label>
+        <input id="servedDate" name="servedDate" type="date" required />
+      </div>
+    </div>
+  </div>
+
+  <!-- DEFENDANT FORM: Section 2 -->
+  <div class="section">
+    <h2>Section 2: Plaintiff & Claim <span>(who’s coming for your diamonds)</span></h2>
+    <div class="grid two">
+      <div>
+        <label for="plaintiffIgn">Plaintiff IGN *</label>
+        <input id="plaintiffIgn" name="plaintiffIgn" type="text" placeholder="e.g., MathiasK0" required />
+      </div>
+      <div>
+        <label for="plaintiffDiscord">Plaintiff Discord</label>
+        <input id="plaintiffDiscord" name="plaintiffDiscord" type="text" placeholder="e.g., @plaintiff" />
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label for="allegations">What are you being accused of? *</label>
+      <textarea id="allegations" name="allegations" placeholder="Copy/paste the claim or describe it. Keep it clear." required></textarea>
+    </div>
+  </div>
+
+  <!-- DEFENDANT FORM: Section 3 -->
+  <div class="section">
+    <h2>Section 3: Your Response <span>(your side of the story)</span></h2>
+
+    <div>
+      <label for="defResponse">Your version of events *</label>
+      <textarea id="defResponse" name="defResponse" placeholder="What happened, in order, with locations/coords if possible." required></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <label>Position *</label>
+      <div class="checks">
+        <label><input type="radio" name="position" value="deny" required /> Deny (didn’t happen / wasn’t me)</label>
+        <label><input type="radio" name="position" value="partial" required /> Partial (some true, some not)</label>
+        <label><input type="radio" name="position" value="admit" required /> Admit (but with explanation/mitigation)</label>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label for="defenses">Defenses / reasons you think you shouldn’t lose *</label>
+      <textarea id="defenses" name="defenses" placeholder="Examples: lack of proof, permission, misunderstanding, server rules." required></textarea>
+    </div>
+  </div>
+
+  <!-- DEFENDANT FORM: Section 4 -->
+  <div class="section">
+    <h2>Section 4: Evidence & Witnesses <span>(proof beats confidence)</span></h2>
+
+    <div class="checks">
+      <label><input type="checkbox" name="defEvidenceType" value="Video clips" /> Video clip(s)</label>
+      <label><input type="checkbox" name="defEvidenceType" value="Screenshots" /> Screenshots</label>
+      <label><input type="checkbox" name="defEvidenceType" value="Chat logs" /> Chat logs</label>
+      <label><input type="checkbox" id="defEvidenceOtherChk" /> Other</label>
+    </div>
+
+    <div style="margin-top:10px">
+      <label for="defEvidenceOther">Other (describe)</label>
+      <input id="defEvidenceOther" name="defEvidenceOther" type="text" placeholder="e.g., server log excerpt" disabled />
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <label>Evidence links / descriptions</label>
+      <div class="list" id="defEvidenceList"></div>
+      <div class="row" style="margin-top:10px">
+        <button type="button" id="addDefEvidenceBtn">+ Add evidence</button>
+        <span class="muted">Links, screenshots, clips, whatever. Just not “trust me bro”.</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <label>Witness IGN(s)</label>
+      <div class="list" id="defWitnessList"></div>
+      <div class="row" style="margin-top:10px">
+        <button type="button" id="addDefWitnessBtn">+ Add witness</button>
+        <span class="muted">Only list people who’ll actually show up.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEFENDANT FORM: Section 5 -->
+  <div class="section">
+    <h2>Section 5: What you want to happen <span>(damage control)</span></h2>
+
+    <div>
+      <label>Are you interested in a settlement? *</label>
+      <div class="checks">
+        <label><input type="radio" name="settlement" value="yes" required /> Yes</label>
+        <label><input type="radio" name="settlement" value="no" required /> No</label>
+        <label><input type="radio" name="settlement" value="maybe" required /> Maybe</label>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label>Preferred outcome *</label>
+      <div class="checks" id="defOutcomes">
+        <label><input type="checkbox" name="defOutcome" value="Case dismissed" /> Case dismissed</label>
+        <label><input type="checkbox" name="defOutcome" value="Reduced damages" /> Reduced damages</label>
+        <label><input type="checkbox" name="defOutcome" value="Pay back / replace items" /> Pay back / replace items</label>
+        <label><input type="checkbox" name="defOutcome" value="Public clarification/apology" /> Public clarification/apology</label>
+        <label><input type="checkbox" name="defOutcome" value="Mediation" /> Mediation</label>
+        <label><input type="checkbox" id="defOutcomeOtherChk" /> Other</label>
+      </div>
+
+      <div style="margin-top:10px">
+        <label for="defOutcomeOther">Other (describe)</label>
+        <input id="defOutcomeOther" name="defOutcomeOther" type="text" placeholder="e.g., schedule a rebuild day" disabled />
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label>Do you want to countersue? *</label>
+      <div class="checks">
+        <label><input type="radio" name="counter" value="no" required /> No</label>
+        <label><input type="radio" name="counter" value="maybe" required /> Maybe</label>
+        <label><input type="radio" name="counter" value="yes" required /> Yes</label>
+      </div>
+
+      <p class="small">If yes/maybe, explain below.</p>
+      <textarea id="counterExplain" name="counterExplain" placeholder="Briefly explain why you want to countersue, and what for."></textarea>
+    </div>
+  </div>
+
+  <!-- DEFENDANT FORM: Section 6 -->
+  <div class="section">
+    <h2>Section 6: Declaration <span>(still don’t lie)</span></h2>
+
+    <div class="checks">
+      <label><input type="checkbox" id="defTruthCheck" required /> I confirm the info provided is truthful to the best of my knowledge.</label>
+      <label><input type="checkbox" id="defUnderstandCheck" required /> I understand lying will make this worse (somehow).</label>
+    </div>
+
+    <div class="grid two" style="margin-top:12px">
+      <div>
+        <label for="defSignature">Signature (IGN) *</label>
+        <input id="defSignature" name="defSignature" type="text" placeholder="Type your IGN" required />
+      </div>
+      <div>
+        <label for="defSignDate">Date *</label>
+        <input id="defSignDate" name="defSignDate" type="date" required />
+      </div>
+    </div>
+
+    <div class="error" id="defErrorBox"></div>
+    <div class="success" id="defSuccessBox"></div>
+  </div>
+
+  <div class="actions">
+    <div class="muted">Tip: Don’t rage-type. It reads like guilt.</div>
+    <div class="right">
+      <button type="button" class="danger" id="defResetBtn">Reset</button>
+      <button type="submit" class="primary">Submit Defense</button>
+    </div>
+  </div>
+</form>
+
     <div class="section" style="margin-top:16px; border-radius: var(--radius); border:1px solid var(--border); background: rgba(255,255,255,.02); box-shadow: var(--shadow);">
       <h2>Submission Output <span>(copy this to your lawyer)</span></h2>
       <div class="row" style="margin: 10px 0 12px;">
@@ -559,6 +752,56 @@
     const evidenceList = $("#evidenceList");
     const witnessList = $("#witnessList");
 
+    // Defendant form init
+const defEvidenceList = $("#defEvidenceList");
+const defWitnessList = $("#defWitnessList");
+
+// Start with one input each
+addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
+addListItem(defWitnessList, "Witness IGN...", "defWitness");
+
+$("#addDefEvidenceBtn").addEventListener("click", () => {
+  addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
+});
+$("#addDefWitnessBtn").addEventListener("click", () => {
+  addListItem(defWitnessList, "Witness IGN...", "defWitness");
+});
+
+// Toggle Other fields
+$("#defEvidenceOtherChk").addEventListener("change", (e) => {
+  $("#defEvidenceOther").disabled = !e.target.checked;
+  if (!e.target.checked) $("#defEvidenceOther").value = "";
+});
+$("#defOutcomeOtherChk").addEventListener("change", (e) => {
+  $("#defOutcomeOther").disabled = !e.target.checked;
+  if (!e.target.checked) $("#defOutcomeOther").value = "";
+});
+
+// Defaults
+$("#defSignDate").value = todayISO();
+$("#servedDate").value = todayISO();
+
+// Tabs
+const tabPlaintiff = $("#tabPlaintiff");
+const tabDefendant = $("#tabDefendant");
+
+function setTab(which) {
+  const isPlaintiff = which === "plaintiff";
+  $("#intakeForm").style.display = isPlaintiff ? "block" : "none";
+  $("#defendantForm").style.display = isPlaintiff ? "none" : "block";
+
+  if (isPlaintiff) {
+    tabPlaintiff.classList.add("primary");
+    tabDefendant.classList.remove("primary");
+  } else {
+    tabDefendant.classList.add("primary");
+    tabPlaintiff.classList.remove("primary");
+  }
+}
+
+tabPlaintiff.addEventListener("click", () => setTab("plaintiff"));
+tabDefendant.addEventListener("click", () => setTab("defendant"));
+
     // Start with one input each (people forget otherwise)
     addListItem(evidenceList, "Evidence link or description...", "evidence");
     addListItem(witnessList, "Witness IGN...", "witness");
@@ -608,6 +851,27 @@
       hide($("#errorBox"));
       hide($("#successBox"));
     });
+
+    // Defendant reset
+$("#defResetBtn").addEventListener("click", () => {
+  $("#defendantForm").reset();
+  $("#defSignDate").value = todayISO();
+  $("#servedDate").value = todayISO();
+
+  defEvidenceList.innerHTML = "";
+  defWitnessList.innerHTML = "";
+  addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
+  addListItem(defWitnessList, "Witness IGN...", "defWitness");
+
+  $("#defEvidenceOther").disabled = true;
+  $("#defOutcomeOther").disabled = true;
+
+  hide($("#defErrorBox"));
+  hide($("#defSuccessBox"));
+
+  $("#caseId").textContent = "Not submitted";
+  $("#output").textContent = '{ "status": "Not submitted yet." }';
+});
 
     // Submit
     let lastSubmission = null;
@@ -720,6 +984,98 @@
 
       show($("#successBox"), "Submitted. Copy the JSON and send it to your lawyer (or post it dramatically in court).");
     });
+
+    // Defendant submit
+let lastDefense = null;
+
+$("#defendantForm").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  hide($("#defErrorBox"));
+  hide($("#defSuccessBox"));
+
+  const required = ["defIgn", "defDiscord", "servedDate", "plaintiffIgn", "allegations", "defResponse", "defenses", "defSignature", "defSignDate"];
+  for (const id of required) {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      show($("#defErrorBox"), `Missing required field: ${id}`);
+      el.focus();
+      return;
+    }
+  }
+
+  const position = $$('input[name="position"]:checked')[0]?.value;
+  if (!position) { show($("#defErrorBox"), "Pick your position (deny/partial/admit)."); return; }
+
+  const settlement = $$('input[name="settlement"]:checked')[0]?.value;
+  if (!settlement) { show($("#defErrorBox"), "Pick settlement preference."); return; }
+
+  const counter = $$('input[name="counter"]:checked')[0]?.value;
+  if (!counter) { show($("#defErrorBox"), "Pick whether you want to countersue."); return; }
+
+  if (!$("#defTruthCheck").checked || !$("#defUnderstandCheck").checked) {
+    show($("#defErrorBox"), "You must accept both declaration checkboxes.");
+    return;
+  }
+
+  const defEvidenceTypes = $$('input[name="defEvidenceType"]:checked').map(x => x.value);
+  const defEvidenceOther = $("#defEvidenceOtherChk").checked ? $("#defEvidenceOther").value.trim() : "";
+  if (defEvidenceOther) defEvidenceTypes.push(defEvidenceOther);
+
+  const defEvidenceItems = getListValues(defEvidenceList, "defEvidence");
+  const defWitnesses = getListValues(defWitnessList, "defWitness");
+
+  const outcomes = $$('input[name="defOutcome"]:checked').map(x => x.value);
+  const outcomeOther = $("#defOutcomeOtherChk").checked ? $("#defOutcomeOther").value.trim() : "";
+  if (outcomeOther) outcomes.push(outcomeOther);
+  if (outcomes.length === 0) {
+    show($("#defErrorBox"), "Select at least one preferred outcome (or use Other).");
+    return;
+  }
+
+  // Use served Case ID if provided, otherwise generate a defense record id
+  const servedId = $("#suedCaseId").value.trim();
+  const recordId = servedId || randomId();
+  $("#caseId").textContent = recordId;
+
+  lastDefense = {
+    recordId,
+    servedCaseId: servedId || null,
+    submittedAt: new Date().toISOString(),
+    defendant: {
+      ign: $("#defIgn").value.trim(),
+      discord: $("#defDiscord").value.trim(),
+      servedDate: $("#servedDate").value
+    },
+    plaintiff: {
+      ign: $("#plaintiffIgn").value.trim(),
+      discord: $("#plaintiffDiscord").value.trim() || null
+    },
+    claim: { allegations: $("#allegations").value.trim() },
+    response: {
+      position,
+      narrative: $("#defResponse").value.trim(),
+      defenses: $("#defenses").value.trim()
+    },
+    evidence: {
+      types: defEvidenceTypes,
+      items: defEvidenceItems,
+      witnesses: defWitnesses
+    },
+    resolution: {
+      settlement,
+      outcomes,
+      counterSuit: counter,
+      counterExplain: $("#counterExplain").value.trim() || null
+    },
+    declaration: {
+      signature: $("#defSignature").value.trim(),
+      date: $("#defSignDate").value
+    }
+  };
+
+  $("#output").textContent = JSON.stringify(lastDefense, null, 2);
+  show($("#defSuccessBox"), "Submitted. Copy the JSON and send it to your lawyer (or your therapist).");
+});
 
     // Copy/download/mailto buttons
     $("#copyBtn").addEventListener("click", async () => {
