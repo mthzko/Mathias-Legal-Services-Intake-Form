@@ -664,11 +664,10 @@
 </form>
 
     <div class="section" style="margin-top:16px; border-radius: var(--radius); border:1px solid var(--border); background: rgba(255,255,255,.02); box-shadow: var(--shadow);">
-      <h2>Submission Output <span>(copy this to your lawyer)</span></h2>
+      <h2>Submission Output <span>(this is what gets sent)</span></h2>
       <div class="row" style="margin: 10px 0 12px;">
         <button type="button" id="copyBtn">Copy JSON</button>
         <button type="button" id="downloadBtn">Download .json</button>
-        <button type="button" id="mailtoBtn">Email JSON (mailto)</button>
         <button type="button" id="webhookBtn">Send to Discord</button>
         <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
           <input type="checkbox" id="autoWebhook" /> Auto-send on submit
@@ -1194,16 +1193,6 @@ $("#defendantForm").addEventListener("submit", async (ev) => {
       show(plaintiffVisible ? $("#successBox") : $("#defSuccessBox"), "Downloaded JSON file.");
     });
 
-    $("#mailtoBtn").addEventListener("click", () => {
-      const text = $("#output").textContent;
-      const id = $("#caseId").textContent.includes("VR-") ? $("#caseId").textContent : "vinterra-case";
-      const subject = encodeURIComponent(`Vinterra SMP Legal Intake – ${id}`);
-      const body = encodeURIComponent(text);
-      // Note: mailto has length limits. Works best for smaller submissions.
-      const plaintiffVisible = $("#intakeForm").style.display !== "none";
-      show(plaintiffVisible ? $("#successBox") : $("#defSuccessBox"), "Opening your email client…");
-      window.location.href = `mailto:?subject=${subject}&body=${body}`;
-    });
   </script>
 </body>
 </html>
