@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vinterra SMP – Legal Intake Form</title>
+  <style>
+    :root{
+      --bg:#0b0d12;
+      --card:#121621;
+      --muted:#9aa6b2;
+      --text:#e8edf2;
+      --accent:#7c5cff;
+      --accent2:#2dd4bf;
+      --danger:#ef4444;
+      --border:#222a3b;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(124,92,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 90% 10%, rgba(45,212,191,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.4;
+    }
+    .wrap{
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 0 18px 80px;
+    }
+    header{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:flex-start;
+      margin-bottom: 18px;
+    }
+    h1{
+      margin:0;
+      font-size: clamp(22px, 3vw, 32px);
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin: 8px 0 0;
+      color:var(--muted);
+      max-width: 70ch;
+      font-size: 14px;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 13px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .pill b{ color: var(--text); font-weight:600; }
+    form{
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .section{
+      padding: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .section:first-child{ border-top:0; }
+    .section h2{
+      margin:0 0 12px;
+      font-size: 16px;
+      color: #dfe7ff;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .section h2 span{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .grid{
+      display:grid;
+      gap: 12px;
+    }
+    @media (min-width: 760px){
+      .grid.two{ grid-template-columns: 1fr 1fr; }
+      .grid.three{ grid-template-columns: 1fr 1fr 1fr; }
+    }
+    label{
+      display:block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{
+      min-height: 110px;
+      resize: vertical;
+    }
+    input::placeholder, textarea::placeholder{ color: rgba(154,166,178,.6); }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(124,92,255,.55);
+      box-shadow: 0 0 0 3px rgba(124,92,255,.12);
+    }
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .checks{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.02);
+    }
+    .checks label{
+      margin:0;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      color: var(--text);
+      font-size: 13px;
+      user-select:none;
+    }
+    .checks input{ accent-color: var(--accent); }
+    .small{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .actions{
+      padding: 16px 18px;
+      border-top: 1px solid var(--border);
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      background: rgba(0,0,0,.12);
+    }
+    button{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    button:hover{ border-color: rgba(124,92,255,.55); }
+    .primary{
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(45,212,191,.75));
+      border-color: transparent;
+      color:#091019;
+    }
+    .danger{
+      border-color: rgba(239,68,68,.45);
+      color: #ffd7d7;
+      background: rgba(239,68,68,.08);
+    }
+    .right{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .muted{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .list{
+      display:grid;
+      gap:10px;
+    }
+    .item{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .item input[type="text"]{ flex: 1; }
+    .item button{ padding: 10px 10px; border-radius: 12px; }
+    .divider{
+      height:1px;
+      background: var(--border);
+      margin: 12px 0;
+    }
+    .error{
+      display:none;
+      margin-top:10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border:1px solid rgba(239,68,68,.45);
+      background: rgba(239,68,68,.08);
+      color:#ffd7d7;
+      font-size: 13px;
+    }
+    .success{
+      display:none;
+      margin-top:10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border:1px solid rgba(45,212,191,.4);
+      background: rgba(45,212,191,.08);
+      color:#d7fff7;
+      font-size: 13px;
+    }
+    pre{
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      overflow:auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #d6deff;
+    }
+    .footer-note{
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      display:inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Vinterra SMP – Mathias' Legal Services' Intake Form</h1>
+        <p class="sub">
+          Fill this out before your lawyer (Mathias) even pretends to care. Clear info and real evidence makes your case stronger.
+          “They were being weird” is not evidence. As long as it's not Taco.
+        </p>
+      </div>
+      <div class="pill" id="casePill" title="Generated on submit">
+        Case ID: <b id="caseId">Not submitted</b>
+      </div>
+    </header>
+
+    <form id="intakeForm" novalidate>
+      <!-- SECTION 1 -->
+      <div class="section">
+        <h2>Section 1: Client Information <span>(who is complaining)</span></h2>
+        <div class="grid two">
+          <div>
+            <label for="clientIgn">In-Game Name (IGN) *</label>
+            <input id="clientIgn" name="clientIgn" type="text" placeholder="e.g., MathiasK0" required />
+          </div>
+          <div>
+            <label for="clientDiscord">Discord Username *</label>
+            <input id="clientDiscord" name="clientDiscord" type="text" placeholder="e.g., mthzko or @Mathias" required />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
+          <label>Are you the affected party? *</label>
+          <div class="checks">
+            <label><input type="radio" name="affectedParty" value="yes" required /> Yes</label>
+            <label><input type="radio" name="affectedParty" value="no" required /> No</label>
+          </div>
+          <p class="small">If “No”, explain the connection below.</p>
+        </div>
+
+        <div>
+          <label for="relationshipExplain">Connection / relationship (if not affected party)</label>
+          <input id="relationshipExplain" name="relationshipExplain" type="text" placeholder="e.g., I'm filing on behalf of my friend / my shop / my chicken cult" />
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div class="section">
+        <h2>Section 2: Defendant Information <span>(who you’re suing)</span></h2>
+        <div class="grid two">
+          <div>
+            <label for="defendantIgn">Defendant IGN *</label>
+            <input id="defendantIgn" name="defendantIgn" type="text" placeholder="e.g., TACOWITHER" required />
+          </div>
+          <div>
+            <label for="defendantAlts">Other person involved</label>
+            <input id="defendantAlts" name="defendantAlts" type="text" placeholder="e.g., SoroF1ed and Foelligs." />
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div class="section">
+        <h2>Section 3: Type of Case <span>(pick your poison)</span></h2>
+        <div class="checks" id="caseTypes">
+          <label><input type="checkbox" name="caseType" value="Griefing" /> Griefing (Blowing up your stuff)</label>
+          <label><input type="checkbox" name="caseType" value="Theft" /> Theft (Taking your only Isac head)</label>
+          <label><input type="checkbox" name="caseType" value="Property Damage" /> Property Damage (Burning down your BIG HORRENDOUS TREE)</label>
+          <label><input type="checkbox" name="caseType" value="Endangerment" /> Endangerment (Not lighting their build = creepers gallore)</label>
+          <label><input type="checkbox" name="caseType" value="Harassment" /> Harassment (TACOWITHER existing)</label>
+          <label><input type="checkbox" name="caseType" value="Contract Dispute" /> Permit/Shop Dispute</label>
+          <label><input type="checkbox" id="caseTypeOtherChk" /> Other</label>
+        </div>
+        <div style="margin-top:10px">
+          <label for="caseTypeOther">Other (describe)</label>
+          <input id="caseTypeOther" name="caseTypeOther" type="text" placeholder="e.g., 'Cut off every statue's head'" disabled />
+        </div>
+        <p class="small">You should select at least one. If you don’t, why are you here?</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div class="section">
+        <h2>Section 4: Incident Details <span>(what happened, where, when)</span></h2>
+        <div class="grid three">
+          <div>
+            <label for="incidentDateStart">Incident start date *</label>
+            <input id="incidentDateStart" name="incidentDateStart" type="date" required />
+          </div>
+          <div>
+            <label for="incidentDateEnd">Incident end date</label>
+            <input id="incidentDateEnd" name="incidentDateEnd" type="date" />
+          </div>
+          <div>
+            <label for="incidentLocation">Location (coords/landmark) *</label>
+            <input id="incidentLocation" name="incidentLocation" type="text" placeholder="e.g., X: 6767 Z: -Aura / Winter Village" required />
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label for="incidentDescription">Detailed description *</label>
+          <textarea id="incidentDescription" name="incidentDescription" placeholder="Explain clearly: actions, sequence, what you saw, what was said. Keep it factual." required></textarea>
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div class="section">
+        <h2>Section 5: Evidence Submitted <span>(links beat vibes)</span></h2>
+        <div class="checks">
+          <label><input type="checkbox" name="evidenceType" value="Video clips" /> Video clip(s)</label>
+          <label><input type="checkbox" name="evidenceType" value="Screenshots" /> Screenshots</label>
+          <label><input type="checkbox" name="evidenceType" value="Chat logs" /> Chat logs</label>
+          <label><input type="checkbox" name="evidenceType" value="Witness statements" /> Witness statements</label>
+          <label><input type="checkbox" id="evidenceOtherChk" /> Other</label>
+        </div>
+        <div style="margin-top:10px">
+          <label for="evidenceOther">Other (describe)</label>
+          <input id="evidenceOther" name="evidenceOther" type="text" placeholder="e.g., 'Map record', 'Chest history screenshot'" disabled />
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
+          <label>Evidence links / descriptions (add as many as needed)</label>
+          <div class="list" id="evidenceList"></div>
+          <div class="row" style="margin-top:10px">
+            <button type="button" id="addEvidenceBtn">+ Add evidence</button>
+            <span class="muted">Examples: Medal link, Twitch clip, Discord attachment URL, description of where it is.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div class="section">
+        <h2>Section 6: Witnesses <span>(people who saw it)</span></h2>
+        <div>
+          <label>Witness IGN(s)</label>
+          <div class="list" id="witnessList"></div>
+          <div class="row" style="margin-top:10px">
+            <button type="button" id="addWitnessBtn">+ Add witness</button>
+            <span class="muted">Witnesses should be willing to show up. If they ghost us that's on you.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div class="section">
+        <h2>Section 7: Damages & Desired Outcome <span>(what you want)</span></h2>
+        <div>
+          <label for="damages">What (if anything) was lost or damaged? *</label>
+          <textarea id="damages" name="damages" placeholder="List items/builds, quantity, and approximate effort/time if relevant." required></textarea>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>What are you seeking? *</label>
+          <div class="checks" id="remedies">
+            <label><input type="checkbox" name="remedy" value="Item/material replacement" /> Item/material replacement</label>
+            <label><input type="checkbox" name="remedy" value="Financial compensation" /> Diamond compensation</label>
+            <label><input type="checkbox" name="remedy" value="Forced rebuild/repair" /> Forced rebuild/repair</label>
+            <label><input type="checkbox" name="remedy" value="Public apology" /> Public (humiliating) apology</label>
+            <label><input type="checkbox" name="remedy" value="Injunction (stay away)" /> Chunk ban (applies to Taco every time)</label>
+            <label><input type="checkbox" id="remedyOtherChk" /> Other</label>
+          </div>
+          <div style="margin-top:10px">
+            <label for="remedyOther">Other (describe)</label>
+            <input id="remedyOther" name="remedyOther" type="text" placeholder="e.g., 'Ban from voicechat for 2 weeks'" disabled />
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div class="section">
+        <h2>Section 8: Additional Notes <span>(optional but helpful)</span></h2>
+        <label for="notes">Anything else?</label>
+        <textarea id="notes" name="notes" placeholder="Anything you think matters. Keep it relevant."></textarea>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div class="section">
+        <h2>Section 9: Declaration <span>(don’t lie)</span></h2>
+        <div class="checks">
+          <label><input type="checkbox" id="truthCheck" required /> I confirm the info provided is truthful to the best of my knowledge.</label>
+          <label><input type="checkbox" id="understandCheck" required /> I understand weak evidence/exaggeration hurts my case and Mathias' image.</label>
+        </div>
+        <div class="grid two" style="margin-top:12px">
+          <div>
+            <label for="signature">Signature (IGN) *</label>
+            <input id="signature" name="signature" type="text" placeholder="Type your IGN" required />
+          </div>
+          <div>
+            <label for="signDate">Date *</label>
+            <input id="signDate" name="signDate" type="date" required />
+          </div>
+        </div>
+
+        <div class="error" id="errorBox"></div>
+        <div class="success" id="successBox"></div>
+      </div>
+
+      <div class="actions">
+        <div class="muted">
+          Tip: Remember to double check everything before submitting. Thx love.
+        </div>
+        <div class="right">
+          <button type="button" class="danger" id="resetBtn">Reset</button>
+          <button type="submit" class="primary">Submit Case</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="section" style="margin-top:16px; border-radius: var(--radius); border:1px solid var(--border); background: rgba(255,255,255,.02); box-shadow: var(--shadow);">
+      <h2>Submission Output <span>(copy this to your lawyer)</span></h2>
+      <div class="row" style="margin: 10px 0 12px;">
+        <button type="button" id="copyBtn">Copy JSON</button>
+        <button type="button" id="downloadBtn">Download .json</button>
+        <button type="button" id="mailtoBtn">Email JSON (mailto)</button>
+        <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
+      </div>
+      <pre id="output">{ "status": "Not submitted yet." }</pre>
+      <div class="footer-note">
+        Note: This JSON is your official submission record. Keep a copy for yourself.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- helpers ----------
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function randomId() {
+      // "VR-" + date + random, because aesthetics matter more than accuracy apparently
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+      return `VR-${y}${m}${day}-${rand}`;
+    }
+
+    function todayISO() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function show(el, msg) {
+      el.style.display = "block";
+      el.textContent = msg;
+    }
+    function hide(el) {
+      el.style.display = "none";
+      el.textContent = "";
+    }
+
+    function addListItem(container, placeholder, kind) {
+      const row = document.createElement("div");
+      row.className = "item";
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = placeholder;
+      input.setAttribute("data-kind", kind);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "danger";
+      btn.textContent = "Remove";
+      btn.addEventListener("click", () => row.remove());
+
+      row.appendChild(input);
+      row.appendChild(btn);
+      container.appendChild(row);
+    }
+
+    function getListValues(container, kind) {
+      return Array.from(container.querySelectorAll(`input[data-kind="${kind}"]`))
+        .map(i => i.value.trim())
+        .filter(Boolean);
+    }
+
+    function downloadText(filename, text) {
+      const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    // ---------- init ----------
+    const evidenceList = $("#evidenceList");
+    const witnessList = $("#witnessList");
+
+    // start with one input each (humans forget otherwise)
+    addListItem(evidenceList, "Evidence link or description...", "evidence");
+    addListItem(witnessList, "Witness IGN...", "witness");
+
+    $("#addEvidenceBtn").addEventListener("click", () => {
+      addListItem(evidenceList, "Evidence link or description...", "evidence");
+    });
+    $("#addWitnessBtn").addEventListener("click", () => {
+      addListItem(witnessList, "Witness IGN...", "witness");
+    });
+
+    // toggle "Other" fields
+    $("#caseTypeOtherChk").addEventListener("change", (e) => {
+      $("#caseTypeOther").disabled = !e.target.checked;
+      if (!e.target.checked) $("#caseTypeOther").value = "";
+    });
+    $("#evidenceOtherChk").addEventListener("change", (e) => {
+      $("#evidenceOther").disabled = !e.target.checked;
+      if (!e.target.checked) $("#evidenceOther").value = "";
+    });
+    $("#remedyOtherChk").addEventListener("change", (e) => {
+      $("#remedyOther").disabled = !e.target.checked;
+      if (!e.target.checked) $("#remedyOther").value = "";
+    });
+
+    // default sign date to today
+    $("#signDate").value = todayISO();
+
+    // reset
+    $("#resetBtn").addEventListener("click", () => {
+      $("#intakeForm").reset();
+      $("#signDate").value = todayISO();
+
+      // clear lists and add defaults
+      evidenceList.innerHTML = "";
+      witnessList.innerHTML = "";
+      addListItem(evidenceList, "Evidence link or description...", "evidence");
+      addListItem(witnessList, "Witness IGN...", "witness");
+
+      // disable "other" inputs again
+      $("#caseTypeOther").disabled = true;
+      $("#evidenceOther").disabled = true;
+      $("#remedyOther").disabled = true;
+
+      $("#caseId").textContent = "Not submitted";
+      $("#output").textContent = '{ "status": "Not submitted yet." }';
+      hide($("#errorBox"));
+      hide($("#successBox"));
+    });
+
+    // submit
+    let lastSubmission = null;
+
+    $("#intakeForm").addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      hide($("#errorBox"));
+      hide($("#successBox"));
+
+      // basic validation
+      const required = ["clientIgn", "clientDiscord", "defendantIgn", "incidentDateStart", "incidentLocation", "incidentDescription", "damages", "signature", "signDate"];
+      for (const id of required) {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) {
+          show($("#errorBox"), `Missing required field: ${id}`);
+          el.focus();
+          return;
+        }
+      }
+
+      const affected = $$('input[name="affectedParty"]:checked')[0]?.value;
+      if (!affected) {
+        show($("#errorBox"), "Select whether you are the affected party.");
+        return;
+      }
+      if (affected === "no" && !$("#relationshipExplain").value.trim()) {
+        show($("#errorBox"), "If you are not the affected party, explain your connection.");
+        $("#relationshipExplain").focus();
+        return;
+      }
+
+      const caseTypes = $$('input[name="caseType"]:checked').map(x => x.value);
+      const caseOther = $("#caseTypeOtherChk").checked ? $("#caseTypeOther").value.trim() : "";
+      if (caseOther) caseTypes.push(caseOther);
+      if (caseTypes.length === 0) {
+        show($("#errorBox"), "Select at least one case type (or use Other).");
+        return;
+      }
+
+      const remedies = $$('input[name="remedy"]:checked').map(x => x.value);
+      const remedyOther = $("#remedyOtherChk").checked ? $("#remedyOther").value.trim() : "";
+      if (remedyOther) remedies.push(remedyOther);
+      if (remedies.length === 0) {
+        show($("#errorBox"), "Select at least one desired outcome (or use Other).");
+        return;
+      }
+
+      if (!$("#truthCheck").checked || !$("#understandCheck").checked) {
+        show($("#errorBox"), "You must accept both declaration checkboxes.");
+        return;
+      }
+
+      const evidenceTypes = $$('input[name="evidenceType"]:checked').map(x => x.value);
+      const evidenceOther = $("#evidenceOtherChk").checked ? $("#evidenceOther").value.trim() : "";
+      if (evidenceOther) evidenceTypes.push(evidenceOther);
+
+      const evidenceLinks = getListValues(evidenceList, "evidence");
+      const witnesses = getListValues(witnessList, "witness");
+
+      const start = $("#incidentDateStart").value;
+      const end = $("#incidentDateEnd").value;
+      if (end && end < start) {
+        show($("#errorBox"), "Incident end date cannot be before the start date.");
+        $("#incidentDateEnd").focus();
+        return;
+      }
+
+      // build submission
+      const caseId = randomId();
+      $("#caseId").textContent = caseId;
+
+      lastSubmission = {
+        caseId,
+        submittedAt: new Date().toISOString(),
+        client: {
+          ign: $("#clientIgn").value.trim(),
+          discord: $("#clientDiscord").value.trim(),
+          affectedParty: affected === "yes",
+          relationshipExplain: $("#relationshipExplain").value.trim() || null
+        },
+        defendant: {
+          ign: $("#defendantIgn").value.trim(),
+          alts: $("#defendantAlts").value.trim() || null
+        },
+        case: {
+          types: caseTypes,
+          incident: {
+            startDate: start,
+            endDate: end || null,
+            location: $("#incidentLocation").value.trim(),
+            description: $("#incidentDescription").value.trim()
+          },
+          evidence: {
+            types: evidenceTypes,
+            items: evidenceLinks
+          },
+          witnesses,
+          damages: $("#damages").value.trim(),
+          remedies,
+          notes: $("#notes").value.trim() || null
+        },
+        declaration: {
+          signature: $("#signature").value.trim(),
+          date: $("#signDate").value
+        }
+      };
+
+      const json = JSON.stringify(lastSubmission, null, 2);
+      $("#output").textContent = json;
+
+      show($("#successBox"), "Submitted. Copy the JSON and send it to your lawyer (or post it dramatically in court).");
+    });
+
+    // copy/download/mailto buttons
+    $("#copyBtn").addEventListener("click", async () => {
+      const text = $("#output").textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+        show($("#successBox"), "Copied to clipboard.");
+      }catch(e){
+        show($("#errorBox"), "Copy failed. Select the JSON and copy manually like it’s 2009.");
+      }
+    });
+
+    $("#downloadBtn").addEventListener("click", () => {
+      const text = $("#output").textContent;
+      const id = $("#caseId").textContent.includes("VR-") ? $("#caseId").textContent : "vinterra-case";
+      downloadText(`${id}.json`, text);
+      show($("#successBox"), "Downloaded JSON file.");
+    });
+
+    $("#mailtoBtn").addEventListener("click", () => {
+      const text = $("#output").textContent;
+      const id = $("#caseId").textContent.includes("VR-") ? $("#caseId").textContent : "vinterra-case";
+      const subject = encodeURIComponent(`Vinterra SMP Legal Intake – ${id}`);
+      const body = encodeURIComponent(text);
+      // NOTE: mailto has length limits. Works best for small-ish submissions.
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    });
+  </script>
+</body>
+</html>
