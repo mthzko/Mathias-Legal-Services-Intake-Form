@@ -284,6 +284,23 @@
 </div>
     </header>
 
+        <div class="section" style="margin-top:16px; border-radius: var(--radius); border:1px solid var(--border); background: rgba(255,255,255,.02); box-shadow: var(--shadow);">
+      <h2>Submission Output <span>(this is what gets sent)</span></h2>
+      <div class="row" style="margin: 10px 0 12px;">
+        <button type="button" id="copyBtn">Copy JSON</button>
+        <button type="button" id="downloadBtn">Download .json</button>
+        <button type="button" id="webhookBtn">Send to Discord</button>
+        <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
+          <input type="checkbox" id="autoWebhook" /> Auto-send on submit
+        </label>
+        <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
+      </div>
+      <pre id="output">{ "status": "Not submitted yet." }</pre>
+      <div class="footer-note">
+        Note: This JSON is your official submission record. Keep a copy for yourself.
+      </div>
+    </div>
+
     <form id="intakeForm" novalidate>
       <!-- Section 1: Client info -->
       <div class="section">
@@ -662,24 +679,6 @@
     </div>
   </div>
 </form>
-
-    <div class="section" style="margin-top:16px; border-radius: var(--radius); border:1px solid var(--border); background: rgba(255,255,255,.02); box-shadow: var(--shadow);">
-      <h2>Submission Output <span>(this is what gets sent)</span></h2>
-      <div class="row" style="margin: 10px 0 12px;">
-        <button type="button" id="copyBtn">Copy JSON</button>
-        <button type="button" id="downloadBtn">Download .json</button>
-        <button type="button" id="webhookBtn">Send to Discord</button>
-        <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
-          <input type="checkbox" id="autoWebhook" /> Auto-send on submit
-        </label>
-        <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
-      </div>
-      <pre id="output">{ "status": "Not submitted yet." }</pre>
-      <div class="footer-note">
-        Note: This JSON is your official submission record. Keep a copy for yourself.
-      </div>
-    </div>
-  </div>
 
   <script>
     // Helpers
