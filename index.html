@@ -1006,6 +1006,11 @@
       }
     }
 
+    function scrollBubbleIntoView() {
+      if (!outputBubble || !smallScreenQuery.matches) return;
+      outputBubble.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     if (smallScreenQuery.addEventListener) {
       smallScreenQuery.addEventListener("change", syncOutputPlacement);
     } else if (smallScreenQuery.addListener) {
@@ -1416,6 +1421,7 @@ lastDocLabel = "Plaintiff";
       show($("#successBox"), "Submitted. Copy the document, download it, or send it to Discord.");
       outputMovedToBottom = true;
       syncOutputPlacement();
+      requestAnimationFrame(scrollBubbleIntoView);
 
       // Auto-send to Discord if enabled
       if ($("#autoWebhook").checked) {
@@ -1640,6 +1646,7 @@ $("#defendantForm").addEventListener("submit", async (ev) => {
   show($("#defSuccessBox"), "Submitted. Copy the JSON, download it, or send it to Discord.");
   outputMovedToBottom = true;
   syncOutputPlacement();
+  requestAnimationFrame(scrollBubbleIntoView);
 
   // Auto-send to Discord if enabled
   if ($("#autoWebhook").checked) {
