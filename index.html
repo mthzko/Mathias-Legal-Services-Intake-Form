@@ -394,7 +394,7 @@
       font-family: var(--sans);
 }
 
-    /* Theme swapping (still dark mode, just different vibes) */
+    /* Theme swapping */
     body.theme-plaintiff{
       --accent:#7c5cff;
       --accent2:#2dd4bf;
@@ -525,7 +525,7 @@
   </style>
 </head>
 
-<body class="bubble-right">
+<body class="bubble-left">
   <div class="mode-overlay" id="modeOverlay" aria-modal="true" role="dialog">
     <div class="mode-card">
       <h2>Pick a form <span style="font-size:12px; color: var(--muted); font-weight:500;">(yes, like a cookie banner, but useful)</span></h2>
@@ -1126,7 +1126,7 @@ function setTab(which) {
   $("#intakeForm").style.display = isPlaintiff ? "block" : "none";
   $("#defendantForm").style.display = isPlaintiff ? "none" : "block";
 
-  // Swap theme (still dark mode)
+  // Swap theme
   document.body.classList.toggle("theme-plaintiff", isPlaintiff);
   document.body.classList.toggle("theme-defendant", !isPlaintiff);
 
