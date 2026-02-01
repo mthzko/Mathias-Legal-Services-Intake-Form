@@ -94,22 +94,22 @@
     }
     body.theme-light{
       color-scheme: light;
-      --bg: #f2f3f6;
-      --card: rgba(255,255,255,0.86);
-      --panel: rgba(255,255,255,0.72);
-      --muted: #5f6773;
-      --text: #1c222f;
-      --border: rgba(21,27,36,0.12);
-      --border-strong: rgba(21,27,36,0.18);
-      --shadow: 0 16px 40px rgba(12,16,22,0.12);
-      --shadow-soft: 0 8px 20px rgba(12,16,22,0.10);
-      --bubble-bg: rgba(255,255,255,0.8);
-      --glass: rgba(255,255,255,0.7);
-      --glass-strong: rgba(255,255,255,0.85);
-      --shine: rgba(255,255,255,0.7);
-      --defense-tint: rgba(143,209,179,0.22);
-      --defense-border: rgba(143,209,179,0.55);
-      --defense-border-strong: rgba(143,209,179,0.85);
+      --bg: #eceff3;
+      --card: rgba(255,255,255,0.96);
+      --panel: rgba(255,255,255,0.92);
+      --muted: #435062;
+      --text: #111826;
+      --border: rgba(17,24,39,0.20);
+      --border-strong: rgba(17,24,39,0.30);
+      --shadow: 0 18px 44px rgba(15,23,34,0.16);
+      --shadow-soft: 0 10px 22px rgba(15,23,34,0.12);
+      --bubble-bg: rgba(255,255,255,0.95);
+      --glass: rgba(255,255,255,0.88);
+      --glass-strong: rgba(255,255,255,0.96);
+      --shine: rgba(255,255,255,0.9);
+      --defense-tint: rgba(143,209,179,0.26);
+      --defense-border: rgba(143,209,179,0.65);
+      --defense-border-strong: rgba(143,209,179,0.95);
     }
     body.theme-dark{
       color-scheme: dark;
@@ -224,7 +224,7 @@
     input::placeholder, textarea::placeholder{ color: rgba(154,166,178,.6); }
     body.theme-light input::placeholder,
     body.theme-light textarea::placeholder{
-      color: rgba(95,105,118,0.6);
+      color: rgba(77,87,102,0.75);
     }
     input:focus, textarea:focus, select:focus{
       border-color: var(--accent-strong);
@@ -340,6 +340,13 @@
       background:
         linear-gradient(135deg, rgba(239,68,68,0.16), rgba(239,68,68,0.04)),
         rgba(239,68,68,.08);
+    }
+    body.theme-light .danger{
+      color: #6f0f1b;
+      border-color: rgba(185,39,58,0.6);
+      background:
+        linear-gradient(135deg, rgba(239,68,68,0.22), rgba(239,68,68,0.08)),
+        rgba(239,68,68,0.12);
     }
     .danger:hover{
       border-color: rgba(239,68,68,0.7);
@@ -855,7 +862,13 @@
   <button type="button" id="tabDefendant" style="padding:8px 12px; border-radius:999px; font-weight:800;">
     I got sued
   </button>
-  
+  <div class="mode-toggle" style="margin-left: 6px;">
+    <label class="switch">
+      <input type="checkbox" id="themeToggleInline" aria-label="Toggle dark mode" />
+      <span class="slider"></span>
+    </label>
+    <span class="mode-state" id="themeStateInline">Dark</span>
+  </div>
 </div>
     </header>
     <div id="outputTopAnchor">
@@ -1263,14 +1276,18 @@
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
     const themeToggle = $("#themeToggle");
+    const themeToggleInline = $("#themeToggleInline");
     const themeState = $("#themeState");
+    const themeStateInline = $("#themeStateInline");
 
     function setAppearance(mode) {
       const isDark = mode === "dark";
       document.body.classList.toggle("theme-dark", isDark);
       document.body.classList.toggle("theme-light", !isDark);
       if (themeToggle) themeToggle.checked = isDark;
+      if (themeToggleInline) themeToggleInline.checked = isDark;
       if (themeState) themeState.textContent = isDark ? "Dark" : "Light";
+      if (themeStateInline) themeStateInline.textContent = isDark ? "Dark" : "Light";
       localStorage.setItem("appearance", isDark ? "dark" : "light");
     }
 
@@ -1280,6 +1297,11 @@
 
     if (themeToggle) {
       themeToggle.addEventListener("change", (e) => {
+        setAppearance(e.target.checked ? "dark" : "light");
+      });
+    }
+    if (themeToggleInline) {
+      themeToggleInline.addEventListener("change", (e) => {
         setAppearance(e.target.checked ? "dark" : "light");
       });
     }
