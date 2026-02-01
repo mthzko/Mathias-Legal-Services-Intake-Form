@@ -972,7 +972,7 @@
     const fileBlob = new Blob([docText], { type: "text/plain" });
     const form = new FormData();
 
-    const content = `${contextLabel} submission received: ${filenameBase}`;
+    const content = `@mthzko ${contextLabel} submission received: ${filenameBase}`;
     form.append("payload_json", JSON.stringify({ content }));
 
     form.append("files[0]", fileBlob, `${filenameBase}.txt`);
@@ -1354,7 +1354,7 @@ function buildPlaintiffDoc(s) {
     "-----------",
     `Signed by: ${s.declaration.signature}`,
     `Date: ${s.declaration.date}`
-  ].filter(Boolean).join("\n");
+  ].filter((line) => line !== null && line !== undefined).join("\n");
 }
 
 function buildDefendantDoc(d) {
@@ -1410,7 +1410,7 @@ function buildDefendantDoc(d) {
     "-----------",
     `Signed by: ${d.declaration.signature}`,
     `Date: ${d.declaration.date}`
-  ].filter(Boolean).join("\n");
+  ].filter((line) => line !== null && line !== undefined).join("\n");
 }
 
     // Defendant submit
