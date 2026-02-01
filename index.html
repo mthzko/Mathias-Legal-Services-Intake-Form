@@ -18,6 +18,9 @@
       --border:#222a3b;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius: 16px;
+      --bubble-width: 340px;
+      --bubble-gap: 24px;
+      --bubble-bg: rgba(18,22,33,.92);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
@@ -292,6 +295,91 @@
       display:inline-block;
     }
 
+    .output-bubble{
+      position: fixed;
+      top: 110px;
+      width: min(var(--bubble-width), 90vw);
+      max-height: calc(100vh - 160px);
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--bubble-bg);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    body.bubble-right .output-bubble{
+      right: var(--bubble-gap);
+      left: auto;
+    }
+
+    body.bubble-left .output-bubble{
+      left: var(--bubble-gap);
+      right: auto;
+    }
+
+    .output-bubble h2{
+      margin: 0 0 6px;
+      font-size: 15px;
+      color: #dfe7ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .output-bubble h2 span{
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .output-bubble .bubble-actions{
+      margin: 4px 0 6px;
+    }
+
+    .output-bubble .doc{
+      flex: 1 1 auto;
+      min-height: 140px;
+      overflow: auto;
+    }
+
+    .output-bubble .footer-note{
+      margin-top: 8px;
+    }
+
+    @media (min-width: 1201px){
+      body.bubble-right{
+        padding-right: calc(var(--bubble-width) + var(--bubble-gap));
+      }
+
+      body.bubble-left{
+        padding-left: calc(var(--bubble-width) + var(--bubble-gap));
+      }
+    }
+
+    @media (max-width: 1200px){
+      .output-bubble{
+        top: auto;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-height: 45vh;
+      }
+
+      body.bubble-right .wrap,
+      body.bubble-left .wrap{
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 360px;
+      }
+    }
+
     /* Document-style output (what users actually see/send) */
     .doc{
       background: rgba(0,0,0,.25);
@@ -437,7 +525,7 @@
   </style>
 </head>
 
-<body>
+<body class="bubble-right">
   <div class="mode-overlay" id="modeOverlay" aria-modal="true" role="dialog">
     <div class="mode-card">
       <h2>Pick a form <span style="font-size:12px; color: var(--muted); font-weight:500;">(yes, like a cookie banner, but useful)</span></h2>
@@ -463,6 +551,22 @@
       </div>
     </div>
   </div>
+  <aside class="output-bubble" aria-live="polite">
+    <h2>Submission Output <span>(this is what gets sent)</span></h2>
+    <div class="row bubble-actions">
+      <button type="button" id="copyBtn">Copy Document</button>
+      <button type="button" id="downloadBtn">Download Document</button>
+      <button type="button" id="webhookBtn">Send to Discord</button>
+      <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
+        <input type="checkbox" id="autoWebhook" checked /> Auto-send on submit
+      </label>
+      <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
+    </div>
+    <div id="output" class="doc">No submission yet.</div>
+    <div class="footer-note">
+      Note: This document is your official submission record. Keep a copy for yourself.
+    </div>
+  </aside>
   <div class="wrap">
     <header>
       <div>
@@ -485,23 +589,6 @@
   </div>
 </div>
     </header>
-
-        <div class="section" style="margin-top:16px; border-radius: var(--radius); border:1px solid var(--border); background: rgba(255,255,255,.02); box-shadow: var(--shadow);">
-      <h2>Submission Output <span>(this is what gets sent)</span></h2>
-      <div class="row" style="margin: 10px 0 12px;">
-        <button type="button" id="copyBtn">Copy Document</button>
-        <button type="button" id="downloadBtn">Download Document</button>
-        <button type="button" id="webhookBtn">Send to Discord</button>
-        <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
-          <input type="checkbox" id="autoWebhook" checked /> Auto-send on submit
-        </label>
-        <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
-      </div>
-      <div id="output" class="doc">No submission yet.</div>
-      <div class="footer-note">
-        Note: This document is your official submission record. Keep a copy for yourself.
-      </div>
-    </div>
 
     <form id="intakeForm" novalidate>
       <!-- Section 1: Client info -->
