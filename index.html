@@ -997,39 +997,6 @@
   }
 }
 
-      try {
-        const json = JSON.stringify(payloadObj, null, 2);
-        const fileBlob = new Blob([json], { type: "application/json" });
-
-        const form = new FormData();
-
-        // Small message for the channel
-        const content = `${contextLabel} submission received: ${filenameBase}`;
-        form.append("payload_json", JSON.stringify({ content }));
-
-        // Attach the JSON as a file so we don't fight the 2000 char limit
-        form.append("files[0]", fileBlob, `${filenameBase}.json`);
-
-        const res = await fetch(DISCORD_WEBHOOK_URL, {
-          method: "POST",
-          body: form
-        });
-
-        if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          throw new Error(`Discord webhook failed (${res.status}). ${text}`);
-        }
-
-        // Success feedback
-        statusEl.classList.remove("error");
-        statusEl.classList.add("success");
-        show(statusEl, "Sent to Discord.");
-      } catch (err) {
-        statusEl.classList.remove("success");
-        statusEl.classList.add("error");
-        show(statusEl, `Discord send failed: ${err.message}`);
-      }
-
     // Init
     const evidenceList = $("#evidenceList");
     const witnessList = $("#witnessList");
