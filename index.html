@@ -364,19 +364,20 @@
 
     @media (max-width: 1200px){
       .output-bubble{
+        position: static;
         top: auto;
-        bottom: 12px;
-        left: 12px;
-        right: 12px;
-        width: auto;
-        max-height: 45vh;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        width: 100%;
+        max-height: none;
+        margin: 16px 0;
       }
 
-      body.bubble-right .wrap,
-      body.bubble-left .wrap{
-        margin-left: auto;
-        margin-right: auto;
-        padding-bottom: 360px;
+      body.bubble-right,
+      body.bubble-left{
+        padding-left: 0;
+        padding-right: 0;
       }
     }
 
@@ -551,22 +552,6 @@
       </div>
     </div>
   </div>
-  <aside class="output-bubble" aria-live="polite">
-    <h2>Submission Output <span>(this is what gets sent)</span></h2>
-    <div class="row bubble-actions">
-      <button type="button" id="copyBtn">Copy Document</button>
-      <button type="button" id="downloadBtn">Download Document</button>
-      <button type="button" id="webhookBtn">Send to Discord</button>
-      <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
-        <input type="checkbox" id="autoWebhook" checked /> Auto-send on submit
-      </label>
-      <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
-    </div>
-    <div id="output" class="doc">No submission yet.</div>
-    <div class="footer-note">
-      Note: This document is your official submission record. Keep a copy for yourself.
-    </div>
-  </aside>
   <div class="wrap">
     <header>
       <div>
@@ -589,6 +574,24 @@
   </div>
 </div>
     </header>
+    <div id="outputTopAnchor">
+      <aside class="output-bubble" aria-live="polite">
+        <h2>Submission Output <span>(this is what gets sent)</span></h2>
+        <div class="row bubble-actions">
+          <button type="button" id="copyBtn">Copy Document</button>
+          <button type="button" id="downloadBtn">Download Document</button>
+          <button type="button" id="webhookBtn">Send to Discord</button>
+          <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
+            <input type="checkbox" id="autoWebhook" checked /> Auto-send on submit
+          </label>
+          <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
+        </div>
+        <div id="output" class="doc">No submission yet.</div>
+        <div class="footer-note">
+          Note: This document is your official submission record. Keep a copy for yourself.
+        </div>
+      </aside>
+    </div>
 
     <form id="intakeForm" novalidate>
       <!-- Section 1: Client info -->
@@ -971,12 +974,41 @@
     </div>
   </div>
 </form>
+    <div id="outputBottomAnchor"></div>
+  </div>
 
   <script>
     // Helpers
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
     document.body.classList.add("theme-plaintiff");
+
+    const outputBubble = document.querySelector(".output-bubble");
+    const outputTopAnchor = document.getElementById("outputTopAnchor");
+    const outputBottomAnchor = document.getElementById("outputBottomAnchor");
+    const smallScreenQuery = window.matchMedia("(max-width: 1200px)");
+    let outputMovedToBottom = false;
+
+    function syncOutputPlacement() {
+      if (!outputBubble || !outputTopAnchor || !outputBottomAnchor) return;
+      if (smallScreenQuery.matches) {
+        if (outputMovedToBottom) {
+          outputBottomAnchor.appendChild(outputBubble);
+        } else {
+          outputTopAnchor.appendChild(outputBubble);
+        }
+      } else {
+        outputTopAnchor.appendChild(outputBubble);
+      }
+    }
+
+    if (smallScreenQuery.addEventListener) {
+      smallScreenQuery.addEventListener("change", syncOutputPlacement);
+    } else if (smallScreenQuery.addListener) {
+      smallScreenQuery.addListener(syncOutputPlacement);
+    }
+    window.addEventListener("resize", syncOutputPlacement);
+    syncOutputPlacement();
 
     function randomId() {
       // "VR-" + date + random. It's not serious, it just looks official.
@@ -1235,6 +1267,8 @@ setTab("plaintiff");
       $("#output").textContent = '{ "status": "Not submitted yet." }';
       hide($("#errorBox"));
       hide($("#successBox"));
+      outputMovedToBottom = false;
+      syncOutputPlacement();
     });
 
     // Defendant reset
@@ -1256,6 +1290,8 @@ $("#defResetBtn").addEventListener("click", () => {
 
   $("#caseId").textContent = "Not submitted";
   $("#output").textContent = '{ "status": "Not submitted yet." }';
+  outputMovedToBottom = false;
+  syncOutputPlacement();
 });
 
     // Submit
@@ -1373,6 +1409,8 @@ lastDocText = doc;
 lastDocLabel = "Plaintiff";
 
       show($("#successBox"), "Submitted. Copy the document, download it, or send it to Discord.");
+      outputMovedToBottom = true;
+      syncOutputPlacement();
 
       // Auto-send to Discord if enabled
       if ($("#autoWebhook").checked) {
@@ -1595,6 +1633,8 @@ $("#defendantForm").addEventListener("submit", async (ev) => {
   lastPayloadLabel = "Defendant";
 
   show($("#defSuccessBox"), "Submitted. Copy the JSON, download it, or send it to Discord.");
+  outputMovedToBottom = true;
+  syncOutputPlacement();
 
   // Auto-send to Discord if enabled
   if ($("#autoWebhook").checked) {
