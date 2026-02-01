@@ -393,7 +393,7 @@
       white-space: pre-wrap;
       word-break: break-word;
       font-family: var(--sans);
-}
+    }
 
     /* Theme swapping */
     body.theme-plaintiff{
@@ -531,7 +531,7 @@
     <div class="mode-card">
       <h2>Pick a form <span style="font-size:12px; color: var(--muted); font-weight:500;">(yes, like a cookie banner, but useful)</span></h2>
       <p>
-        Choose what you’re here for. This just quickly tailors the form and vibe to your situation.
+        Pick what you’re here for. This just tweaks the form and the vibe.
       </p>
 
       <div class="mode-actions">
@@ -542,12 +542,12 @@
 
         <button type="button" class="mode-btn defendant" id="overlayDefendantBtn">
           <span class="title">I got sued</span>
-          <span class="desc">Respond to allegations, upload counter-evidence, choose outcomes, consider revenge litigation.</span>
+          <span class="desc">Respond to allegations, add your evidence, choose outcomes, consider counter-suing.</span>
         </button>
       </div>
 
       <div class="mode-footer">
-        <span>Tip: You can switch tabs later. This just makes you pick something first.</span>
+        <span>Tip: You can switch tabs later. This just makes you pick a lane first.</span>
         <button type="button" class="ghost-link" id="overlayCloseBtn">Skip</button>
       </div>
     </div>
@@ -555,10 +555,10 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>Vinterra SMP – Mathias' Legal Services' Intake Form</h1>
+        <h1>Vinterra SMP – Mathias' Legal Services Intake Form</h1>
         <p class="sub">
-          Fill this out before your lawyer (Mathias) even pretends to care. Clear info and real evidence makes your case stronger.
-          “They were being weird” is not evidence. As long as it's not Taco.
+          Fill this out before your lawyer (Mathias) even pretends to care. Clear info + real evidence makes your case stronger.
+          “They were being weird” is not evidence. Unless it was Taco. Then we already know.
         </p>
       </div>
  <div class="row" style="justify-content:flex-end; gap:10px;">
@@ -576,7 +576,7 @@
     </header>
     <div id="outputTopAnchor">
       <aside class="output-bubble" aria-live="polite">
-        <h2>Submission Output <span>(this is what gets sent)</span></h2>
+        <h2>Submission Document <span>(this is what gets sent)</span></h2>
         <div class="row bubble-actions">
           <button type="button" id="copyBtn">Copy Document</button>
           <button type="button" id="downloadBtn">Download Document</button>
@@ -634,7 +634,7 @@
             <input id="defendantIgn" name="defendantIgn" type="text" placeholder="e.g., TACOWITHER" required />
           </div>
           <div>
-            <label for="defendantAlts">Other person involved</label>
+            <label for="defendantAlts">Other involved players</label>
             <input id="defendantAlts" name="defendantAlts" type="text" placeholder="e.g., SoroF1ed and Foelligs." />
           </div>
         </div>
@@ -645,9 +645,9 @@
         <h2>Section 3: Type of Case <span>(pick your poison)</span></h2>
         <div class="checks" id="caseTypes">
           <label><input type="checkbox" name="caseType" value="Griefing" /> Griefing (Blowing up your stuff)</label>
-          <label><input type="checkbox" name="caseType" value="Theft" /> Theft (Taking your only Isac head)</label>
+          <label><input type="checkbox" name="caseType" value="Theft" /> Theft (Taking your only Isaac head)</label>
           <label><input type="checkbox" name="caseType" value="Property Damage" /> Property Damage (Burning down your BIG HORRENDOUS TREE)</label>
-          <label><input type="checkbox" name="caseType" value="Endangerment" /> Endangerment (Not lighting their build = creepers gallore)</label>
+          <label><input type="checkbox" name="caseType" value="Endangerment" /> Endangerment (Unlit builds = creepers galore)</label>
           <label><input type="checkbox" name="caseType" value="Harassment" /> Harassment (TACOWITHER existing)</label>
           <label><input type="checkbox" name="caseType" value="Contract Dispute" /> Permit/Shop Dispute</label>
           <label><input type="checkbox" id="caseTypeOtherChk" /> Other</label>
@@ -779,7 +779,7 @@
 
       <div class="actions">
         <div class="muted">
-          Tip: Remember to double check everything before submitting. Thx love.
+          Tip: Double-check before submitting. Thx.
         </div>
         <div class="right">
           <button type="button" class="danger" id="resetBtn">Reset</button>
@@ -979,7 +979,7 @@
   </div>
 
   <script>
-    // Helpers
+    // Tiny DOM helpers
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
     document.body.classList.add("theme-plaintiff");
@@ -1084,150 +1084,150 @@
       URL.revokeObjectURL(url);
     }
 
-    // Discord webhook (CLIENT-SIDE WARNING: please don't abuse this volnerability inspect element wizards)
+    // Discord webhook note: this is client-side, so treat the URL like a public link.
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1467289266391613472/iWFehe7bhU6W8x6ZOt6BlAcLzyUO3H32Ia4yj2-5GO_UOVvVYFWxLk6Q1ZbaNgDi770m";
 
     async function sendToDiscordWebhook(docText, filenameBase, contextLabel, statusEl) {
-  if (!DISCORD_WEBHOOK_URL) {
-    show(statusEl, "Discord webhook not configured. Ask Mathias to paste the webhook URL into the site code.");
-    statusEl.classList.remove("success");
-    statusEl.classList.add("error");
-    statusEl.style.display = "block";
-    return;
-  }
+      if (!DISCORD_WEBHOOK_URL) {
+        show(statusEl, "Discord webhook not configured. Ask Mathias to paste the webhook URL into the site code.");
+        statusEl.classList.remove("success");
+        statusEl.classList.add("error");
+        statusEl.style.display = "block";
+        return;
+      }
 
-  try {
-    const fileBlob = new Blob([docText], { type: "text/plain" });
-    const form = new FormData();
+      try {
+        const fileBlob = new Blob([docText], { type: "text/plain" });
+        const form = new FormData();
 
-    const content = `${contextLabel} submission received: ${filenameBase}`;
-    form.append("payload_json", JSON.stringify({ content }));
+        const content = `${contextLabel} submission received: ${filenameBase}`;
+        form.append("payload_json", JSON.stringify({ content }));
 
-    form.append("files[0]", fileBlob, `${filenameBase}.txt`);
+        form.append("files[0]", fileBlob, `${filenameBase}.txt`);
 
-    const res = await fetch(DISCORD_WEBHOOK_URL, {
-      method: "POST",
-      body: form
-    });
+        const res = await fetch(DISCORD_WEBHOOK_URL, {
+          method: "POST",
+          body: form
+        });
 
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`Discord webhook failed (${res.status}). ${text}`);
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(`Discord webhook failed (${res.status}). ${text}`);
+        }
+
+        statusEl.classList.remove("error");
+        statusEl.classList.add("success");
+        show(statusEl, "Sent to Discord.");
+      } catch (err) {
+        statusEl.classList.remove("success");
+        statusEl.classList.add("error");
+        show(statusEl, `Discord send failed: ${err.message}`);
+      }
     }
 
-    statusEl.classList.remove("error");
-    statusEl.classList.add("success");
-    show(statusEl, "Sent to Discord.");
-  } catch (err) {
-    statusEl.classList.remove("success");
-    statusEl.classList.add("error");
-    show(statusEl, `Discord send failed: ${err.message}`);
-  }
-}
-
-    // Init
+    // Lists
     const evidenceList = $("#evidenceList");
     const witnessList = $("#witnessList");
 
-    // Defendant form init
-const defEvidenceList = $("#defEvidenceList");
-const defWitnessList = $("#defWitnessList");
+    // Defendant form lists
+    const defEvidenceList = $("#defEvidenceList");
+    const defWitnessList = $("#defWitnessList");
 
-// Start with one input each
-addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
-addListItem(defWitnessList, "Witness IGN...", "defWitness");
+    // Start with one input each
+    addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
+    addListItem(defWitnessList, "Witness IGN...", "defWitness");
 
-$("#addDefEvidenceBtn").addEventListener("click", () => {
-  addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
-});
-$("#addDefWitnessBtn").addEventListener("click", () => {
-  addListItem(defWitnessList, "Witness IGN...", "defWitness");
-});
+    $("#addDefEvidenceBtn").addEventListener("click", () => {
+      addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
+    });
+    $("#addDefWitnessBtn").addEventListener("click", () => {
+      addListItem(defWitnessList, "Witness IGN...", "defWitness");
+    });
 
-// Toggle Other fields
-$("#defEvidenceOtherChk").addEventListener("change", (e) => {
-  $("#defEvidenceOther").disabled = !e.target.checked;
-  if (!e.target.checked) $("#defEvidenceOther").value = "";
-});
-$("#defOutcomeOtherChk").addEventListener("change", (e) => {
-  $("#defOutcomeOther").disabled = !e.target.checked;
-  if (!e.target.checked) $("#defOutcomeOther").value = "";
-});
+    // Toggle "Other" fields
+    $("#defEvidenceOtherChk").addEventListener("change", (e) => {
+      $("#defEvidenceOther").disabled = !e.target.checked;
+      if (!e.target.checked) $("#defEvidenceOther").value = "";
+    });
+    $("#defOutcomeOtherChk").addEventListener("change", (e) => {
+      $("#defOutcomeOther").disabled = !e.target.checked;
+      if (!e.target.checked) $("#defOutcomeOther").value = "";
+    });
 
-// Defaults
-$("#defSignDate").value = todayISO();
-$("#servedDate").value = todayISO();
+    // Default dates
+    $("#defSignDate").value = todayISO();
+    $("#servedDate").value = todayISO();
 
-// Tabs
-const tabPlaintiff = $("#tabPlaintiff");
-const tabDefendant = $("#tabDefendant");
+    // Mode tabs
+    const tabPlaintiff = $("#tabPlaintiff");
+    const tabDefendant = $("#tabDefendant");
 
-function setTab(which) {
-  const isPlaintiff = which === "plaintiff";
-  $("#intakeForm").style.display = isPlaintiff ? "block" : "none";
-  $("#defendantForm").style.display = isPlaintiff ? "none" : "block";
+    function setTab(which) {
+      const isPlaintiff = which === "plaintiff";
+      $("#intakeForm").style.display = isPlaintiff ? "block" : "none";
+      $("#defendantForm").style.display = isPlaintiff ? "none" : "block";
 
-  // Swap theme
-  document.body.classList.toggle("theme-plaintiff", isPlaintiff);
-  document.body.classList.toggle("theme-defendant", !isPlaintiff);
+      // Swap theme
+      document.body.classList.toggle("theme-plaintiff", isPlaintiff);
+      document.body.classList.toggle("theme-defendant", !isPlaintiff);
 
-  if (isPlaintiff) {
-    tabPlaintiff.classList.add("primary");
-    tabPlaintiff.classList.remove("primary-defendant");
+      if (isPlaintiff) {
+        tabPlaintiff.classList.add("primary");
+        tabPlaintiff.classList.remove("primary-defendant");
 
-    tabDefendant.classList.remove("primary");
-    tabDefendant.classList.remove("primary-defendant");
-  } else {
-    tabDefendant.classList.add("primary-defendant");
-    tabDefendant.classList.remove("primary");
+        tabDefendant.classList.remove("primary");
+        tabDefendant.classList.remove("primary-defendant");
+      } else {
+        tabDefendant.classList.add("primary-defendant");
+        tabDefendant.classList.remove("primary");
 
-    tabPlaintiff.classList.remove("primary");
-    tabPlaintiff.classList.remove("primary-defendant");
-  }
-  syncOutputPlacement();
-}
+        tabPlaintiff.classList.remove("primary");
+        tabPlaintiff.classList.remove("primary-defendant");
+      }
+      syncOutputPlacement();
+    }
 
-tabPlaintiff.addEventListener("click", () => setTab("plaintiff"));
-tabDefendant.addEventListener("click", () => setTab("defendant"));
+    tabPlaintiff.addEventListener("click", () => setTab("plaintiff"));
+    tabDefendant.addEventListener("click", () => setTab("defendant"));
 
-// Fullscreen mode picker overlay
-const modeOverlay = $("#modeOverlay");
-const overlayPlaintiffBtn = $("#overlayPlaintiffBtn");
-const overlayDefendantBtn = $("#overlayDefendantBtn");
-const overlayCloseBtn = $("#overlayCloseBtn");
+    // Fullscreen mode picker overlay
+    const modeOverlay = $("#modeOverlay");
+    const overlayPlaintiffBtn = $("#overlayPlaintiffBtn");
+    const overlayDefendantBtn = $("#overlayDefendantBtn");
+    const overlayCloseBtn = $("#overlayCloseBtn");
 
-function hideOverlay() {
-  modeOverlay.classList.add("hidden");
-  // Fully remove from layout after fade
-  setTimeout(() => { modeOverlay.style.display = "none"; }, 260);
-}
+    function hideOverlay() {
+      modeOverlay.classList.add("hidden");
+      // Fully remove from layout after fade
+      setTimeout(() => { modeOverlay.style.display = "none"; }, 260);
+    }
 
-overlayPlaintiffBtn.addEventListener("click", () => {
-  setTab("plaintiff");
-  hideOverlay();
-});
+    overlayPlaintiffBtn.addEventListener("click", () => {
+      setTab("plaintiff");
+      hideOverlay();
+    });
 
-overlayDefendantBtn.addEventListener("click", () => {
-  setTab("defendant");
-  hideOverlay();
-});
+    overlayDefendantBtn.addEventListener("click", () => {
+      setTab("defendant");
+      hideOverlay();
+    });
 
-overlayCloseBtn.addEventListener("click", () => {
-  // Default to plaintiff if they refuse to choose
-  setTab("plaintiff");
-  hideOverlay();
-});
+    overlayCloseBtn.addEventListener("click", () => {
+      // Default to plaintiff if they refuse to choose
+      setTab("plaintiff");
+      hideOverlay();
+    });
 
-// Allow ESC to skip
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && modeOverlay.style.display !== "none") {
+    // ESC to skip
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modeOverlay.style.display !== "none") {
+        setTab("plaintiff");
+        hideOverlay();
+      }
+    });
+
+    // Start on plaintiff by default
     setTab("plaintiff");
-    hideOverlay();
-  }
-});
-
-// On load, show overlay and ensure correct initial tab styling
-setTab("plaintiff");
 
     // Start with one input each (people forget otherwise)
     addListItem(evidenceList, "Evidence link or description...", "evidence");
@@ -1274,7 +1274,10 @@ setTab("plaintiff");
       $("#remedyOther").disabled = true;
 
       $("#caseId").textContent = "Not submitted";
-      $("#output").textContent = '{ "status": "Not submitted yet." }';
+      $("#output").textContent = "No submission yet.";
+      lastSubmission = null;
+      lastDocText = null;
+      lastDocLabel = null;
       hide($("#errorBox"));
       hide($("#successBox"));
       outputMovedToBottom = false;
@@ -1282,32 +1285,36 @@ setTab("plaintiff");
     });
 
     // Defendant reset
-$("#defResetBtn").addEventListener("click", () => {
-  $("#defendantForm").reset();
-  $("#defSignDate").value = todayISO();
-  $("#servedDate").value = todayISO();
+    $("#defResetBtn").addEventListener("click", () => {
+      $("#defendantForm").reset();
+      $("#defSignDate").value = todayISO();
+      $("#servedDate").value = todayISO();
 
-  defEvidenceList.innerHTML = "";
-  defWitnessList.innerHTML = "";
-  addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
-  addListItem(defWitnessList, "Witness IGN...", "defWitness");
+      defEvidenceList.innerHTML = "";
+      defWitnessList.innerHTML = "";
+      addListItem(defEvidenceList, "Evidence link or description...", "defEvidence");
+      addListItem(defWitnessList, "Witness IGN...", "defWitness");
 
-  $("#defEvidenceOther").disabled = true;
-  $("#defOutcomeOther").disabled = true;
+      $("#defEvidenceOther").disabled = true;
+      $("#defOutcomeOther").disabled = true;
 
-  hide($("#defErrorBox"));
-  hide($("#defSuccessBox"));
+      hide($("#defErrorBox"));
+      hide($("#defSuccessBox"));
 
-  $("#caseId").textContent = "Not submitted";
-  $("#output").textContent = '{ "status": "Not submitted yet." }';
-  outputMovedToBottom = false;
-  syncOutputPlacement();
-});
+      $("#caseId").textContent = "Not submitted";
+      $("#output").textContent = "No submission yet.";
+      lastDefense = null;
+      lastDocText = null;
+      lastDocLabel = null;
+      outputMovedToBottom = false;
+      syncOutputPlacement();
+    });
 
-    // Submit
+    // Submissions
     let lastSubmission = null;
-    let lastPayload = null;
-    let lastPayloadLabel = null;
+    let lastDefense = null;
+    let lastDocText = null;
+    let lastDocLabel = null;
 
     $("#intakeForm").addEventListener("submit", async (ev) => {
       ev.preventDefault();
@@ -1413,10 +1420,10 @@ $("#defResetBtn").addEventListener("click", () => {
       };
 
       const doc = buildPlaintiffDoc(lastSubmission);
-$("#output").textContent = doc;
+      $("#output").textContent = doc;
 
-lastDocText = doc;
-lastDocLabel = "Plaintiff";
+      lastDocText = doc;
+      lastDocLabel = "Plaintiff";
 
       show($("#successBox"), "Submitted. Copy the document, download it, or send it to Discord.");
       outputMovedToBottom = true;
@@ -1430,229 +1437,227 @@ lastDocLabel = "Plaintiff";
     });
 
     function fmtList(arr) {
-  if (!arr || arr.length === 0) return "(none)";
-  return arr.map((x, i) => `${i + 1}. ${x}`).join("\n");
-}
+      if (!arr || arr.length === 0) return "(none)";
+      return arr.map((x, i) => `${i + 1}. ${x}`).join("\n");
+    }
 
-function buildPlaintiffDoc(s) {
-  const end = s.case.incident.endDate ? ` to ${s.case.incident.endDate}` : "";
-  return [
-    "VINTERRA SMP – LEGAL INTAKE (PLAINTIFF)",
-    "====================================",
-    `Case ID: ${s.caseId}`,
-    `Submitted: ${new Date(s.submittedAt).toLocaleString()}`,
-    "",
-    "CLIENT",
-    "------",
-    `IGN: ${s.client.ign}`,
-    `Discord: ${s.client.discord}`,
-    `Affected party: ${s.client.affectedParty ? "Yes" : "No"}`,
-    s.client.relationshipExplain ? `Connection: ${s.client.relationshipExplain}` : null,
-    "",
-    "DEFENDANT",
-    "---------",
-    `IGN: ${s.defendant.ign}`,
-    s.defendant.alts ? `Other involved: ${s.defendant.alts}` : null,
-    "",
-    "CASE SUMMARY",
-    "------------",
-    `Types: ${s.case.types.join(", ")}`,
-    `Date(s): ${s.case.incident.startDate}${end}`,
-    `Location: ${s.case.incident.location}`,
-    "",
-    "DESCRIPTION",
-    "-----------",
-    s.case.incident.description,
-    "",
-    "EVIDENCE",
-    "--------",
-    `Evidence types: ${s.case.evidence.types.length ? s.case.evidence.types.join(", ") : "(none selected)"}`,
-    "Evidence items:",
-    fmtList(s.case.evidence.items),
-    "",
-    "WITNESSES",
-    "---------",
-    fmtList(s.case.witnesses),
-    "",
-    "DAMAGES",
-    "-------",
-    s.case.damages,
-    "",
-    "REQUESTED OUTCOME",
-    "-----------------",
-    fmtList(s.case.remedies),
-    "",
-    "ADDITIONAL NOTES",
-    "----------------",
-    s.case.notes || "(none)",
-    "",
-    "DECLARATION",
-    "-----------",
-    `Signed by: ${s.declaration.signature}`,
-    `Date: ${s.declaration.date}`
-  ].filter((line) => line !== null && line !== undefined).join("\n");
-}
+    function buildPlaintiffDoc(s) {
+      const end = s.case.incident.endDate ? ` to ${s.case.incident.endDate}` : "";
+      return [
+        "VINTERRA SMP – LEGAL INTAKE (PLAINTIFF)",
+        "====================================",
+        `Case ID: ${s.caseId}`,
+        `Submitted: ${new Date(s.submittedAt).toLocaleString()}`,
+        "",
+        "CLIENT",
+        "------",
+        `IGN: ${s.client.ign}`,
+        `Discord: ${s.client.discord}`,
+        `Affected party: ${s.client.affectedParty ? "Yes" : "No"}`,
+        s.client.relationshipExplain ? `Connection: ${s.client.relationshipExplain}` : null,
+        "",
+        "DEFENDANT",
+        "---------",
+        `IGN: ${s.defendant.ign}`,
+        s.defendant.alts ? `Other involved: ${s.defendant.alts}` : null,
+        "",
+        "CASE SUMMARY",
+        "------------",
+        `Types: ${s.case.types.join(", ")}`,
+        `Date(s): ${s.case.incident.startDate}${end}`,
+        `Location: ${s.case.incident.location}`,
+        "",
+        "DESCRIPTION",
+        "-----------",
+        s.case.incident.description,
+        "",
+        "EVIDENCE",
+        "--------",
+        `Evidence types: ${s.case.evidence.types.length ? s.case.evidence.types.join(", ") : "(none selected)"}`,
+        "Evidence items:",
+        fmtList(s.case.evidence.items),
+        "",
+        "WITNESSES",
+        "---------",
+        fmtList(s.case.witnesses),
+        "",
+        "DAMAGES",
+        "-------",
+        s.case.damages,
+        "",
+        "REQUESTED OUTCOME",
+        "-----------------",
+        fmtList(s.case.remedies),
+        "",
+        "ADDITIONAL NOTES",
+        "----------------",
+        s.case.notes || "(none)",
+        "",
+        "DECLARATION",
+        "-----------",
+        `Signed by: ${s.declaration.signature}`,
+        `Date: ${s.declaration.date}`
+      ].filter((line) => line !== null && line !== undefined).join("\n");
+    }
 
-function buildDefendantDoc(d) {
-  return [
-    "VINTERRA SMP – LEGAL INTAKE (DEFENDANT)",
-    "====================================",
-    `Record ID: ${d.recordId}`,
-    d.servedCaseId ? `Served Case ID: ${d.servedCaseId}` : null,
-    `Submitted: ${new Date(d.submittedAt).toLocaleString()}`,
-    "",
-    "DEFENDANT",
-    "---------",
-    `IGN: ${d.defendant.ign}`,
-    `Discord: ${d.defendant.discord}`,
-    `Served date: ${d.defendant.servedDate}`,
-    "",
-    "PLAINTIFF",
-    "---------",
-    `IGN: ${d.plaintiff.ign}`,
-    d.plaintiff.discord ? `Discord: ${d.plaintiff.discord}` : null,
-    "",
-    "ALLEGATIONS",
-    "----------",
-    d.claim.allegations,
-    "",
-    "RESPONSE",
-    "--------",
-    `Position: ${d.response.position}`,
-    "",
-    d.response.narrative,
-    "",
-    "DEFENSES",
-    "--------",
-    d.response.defenses,
-    "",
-    "EVIDENCE",
-    "--------",
-    `Evidence types: ${d.evidence.types.length ? d.evidence.types.join(", ") : "(none selected)"}`,
-    "Evidence items:",
-    fmtList(d.evidence.items),
-    "Witnesses:",
-    fmtList(d.evidence.witnesses),
-    "",
-    "RESOLUTION",
-    "----------",
-    `Settlement: ${d.resolution.settlement}`,
-    "Preferred outcomes:",
-    fmtList(d.resolution.outcomes),
-    `Countersuit: ${d.resolution.counterSuit}`,
-    d.resolution.counterExplain ? `Countersuit notes: ${d.resolution.counterExplain}` : null,
-    "",
-    "DECLARATION",
-    "-----------",
-    `Signed by: ${d.declaration.signature}`,
-    `Date: ${d.declaration.date}`
-  ].filter((line) => line !== null && line !== undefined).join("\n");
-}
+    function buildDefendantDoc(d) {
+      return [
+        "VINTERRA SMP – LEGAL INTAKE (DEFENDANT)",
+        "====================================",
+        `Record ID: ${d.recordId}`,
+        d.servedCaseId ? `Served Case ID: ${d.servedCaseId}` : null,
+        `Submitted: ${new Date(d.submittedAt).toLocaleString()}`,
+        "",
+        "DEFENDANT",
+        "---------",
+        `IGN: ${d.defendant.ign}`,
+        `Discord: ${d.defendant.discord}`,
+        `Served date: ${d.defendant.servedDate}`,
+        "",
+        "PLAINTIFF",
+        "---------",
+        `IGN: ${d.plaintiff.ign}`,
+        d.plaintiff.discord ? `Discord: ${d.plaintiff.discord}` : null,
+        "",
+        "ALLEGATIONS",
+        "----------",
+        d.claim.allegations,
+        "",
+        "RESPONSE",
+        "--------",
+        `Position: ${d.response.position}`,
+        "",
+        d.response.narrative,
+        "",
+        "DEFENSES",
+        "--------",
+        d.response.defenses,
+        "",
+        "EVIDENCE",
+        "--------",
+        `Evidence types: ${d.evidence.types.length ? d.evidence.types.join(", ") : "(none selected)"}`,
+        "Evidence items:",
+        fmtList(d.evidence.items),
+        "Witnesses:",
+        fmtList(d.evidence.witnesses),
+        "",
+        "RESOLUTION",
+        "----------",
+        `Settlement: ${d.resolution.settlement}`,
+        "Preferred outcomes:",
+        fmtList(d.resolution.outcomes),
+        `Countersuit: ${d.resolution.counterSuit}`,
+        d.resolution.counterExplain ? `Countersuit notes: ${d.resolution.counterExplain}` : null,
+        "",
+        "DECLARATION",
+        "-----------",
+        `Signed by: ${d.declaration.signature}`,
+        `Date: ${d.declaration.date}`
+      ].filter((line) => line !== null && line !== undefined).join("\n");
+    }
 
     // Defendant submit
-let lastDefense = null;
+    $("#defendantForm").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      hide($("#defErrorBox"));
+      hide($("#defSuccessBox"));
 
-$("#defendantForm").addEventListener("submit", async (ev) => {
-  ev.preventDefault();
-  hide($("#defErrorBox"));
-  hide($("#defSuccessBox"));
+      const required = ["defIgn", "defDiscord", "servedDate", "plaintiffIgn", "allegations", "defResponse", "defenses", "defSignature", "defSignDate"];
+      for (const id of required) {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) {
+          show($("#defErrorBox"), `Missing required field: ${id}`);
+          el.focus();
+          return;
+        }
+      }
 
-  const required = ["defIgn", "defDiscord", "servedDate", "plaintiffIgn", "allegations", "defResponse", "defenses", "defSignature", "defSignDate"];
-  for (const id of required) {
-    const el = document.getElementById(id);
-    if (!el.value.trim()) {
-      show($("#defErrorBox"), `Missing required field: ${id}`);
-      el.focus();
-      return;
-    }
-  }
+      const position = $$('input[name="position"]:checked')[0]?.value;
+      if (!position) { show($("#defErrorBox"), "Pick your position (deny/partial/admit)."); return; }
 
-  const position = $$('input[name="position"]:checked')[0]?.value;
-  if (!position) { show($("#defErrorBox"), "Pick your position (deny/partial/admit)."); return; }
+      const settlement = $$('input[name="settlement"]:checked')[0]?.value;
+      if (!settlement) { show($("#defErrorBox"), "Pick settlement preference."); return; }
 
-  const settlement = $$('input[name="settlement"]:checked')[0]?.value;
-  if (!settlement) { show($("#defErrorBox"), "Pick settlement preference."); return; }
+      const counter = $$('input[name="counter"]:checked')[0]?.value;
+      if (!counter) { show($("#defErrorBox"), "Pick whether you want to countersue."); return; }
 
-  const counter = $$('input[name="counter"]:checked')[0]?.value;
-  if (!counter) { show($("#defErrorBox"), "Pick whether you want to countersue."); return; }
+      if (!$("#defTruthCheck").checked || !$("#defUnderstandCheck").checked) {
+        show($("#defErrorBox"), "You must accept both declaration checkboxes.");
+        return;
+      }
 
-  if (!$("#defTruthCheck").checked || !$("#defUnderstandCheck").checked) {
-    show($("#defErrorBox"), "You must accept both declaration checkboxes.");
-    return;
-  }
+      const defEvidenceTypes = $$('input[name="defEvidenceType"]:checked').map(x => x.value);
+      const defEvidenceOther = $("#defEvidenceOtherChk").checked ? $("#defEvidenceOther").value.trim() : "";
+      if (defEvidenceOther) defEvidenceTypes.push(defEvidenceOther);
 
-  const defEvidenceTypes = $$('input[name="defEvidenceType"]:checked').map(x => x.value);
-  const defEvidenceOther = $("#defEvidenceOtherChk").checked ? $("#defEvidenceOther").value.trim() : "";
-  if (defEvidenceOther) defEvidenceTypes.push(defEvidenceOther);
+      const defEvidenceItems = getListValues(defEvidenceList, "defEvidence");
+      const defWitnesses = getListValues(defWitnessList, "defWitness");
 
-  const defEvidenceItems = getListValues(defEvidenceList, "defEvidence");
-  const defWitnesses = getListValues(defWitnessList, "defWitness");
+      const outcomes = $$('input[name="defOutcome"]:checked').map(x => x.value);
+      const outcomeOther = $("#defOutcomeOtherChk").checked ? $("#defOutcomeOther").value.trim() : "";
+      if (outcomeOther) outcomes.push(outcomeOther);
+      if (outcomes.length === 0) {
+        show($("#defErrorBox"), "Select at least one preferred outcome (or use Other).");
+        return;
+      }
 
-  const outcomes = $$('input[name="defOutcome"]:checked').map(x => x.value);
-  const outcomeOther = $("#defOutcomeOtherChk").checked ? $("#defOutcomeOther").value.trim() : "";
-  if (outcomeOther) outcomes.push(outcomeOther);
-  if (outcomes.length === 0) {
-    show($("#defErrorBox"), "Select at least one preferred outcome (or use Other).");
-    return;
-  }
+      // Use served Case ID if provided, otherwise generate a defense record id
+      const servedId = $("#suedCaseId").value.trim();
+      const recordId = servedId || randomId();
+      $("#caseId").textContent = recordId;
 
-  // Use served Case ID if provided, otherwise generate a defense record id
-  const servedId = $("#suedCaseId").value.trim();
-  const recordId = servedId || randomId();
-  $("#caseId").textContent = recordId;
+      lastDefense = {
+        recordId,
+        servedCaseId: servedId || null,
+        submittedAt: new Date().toISOString(),
+        defendant: {
+          ign: $("#defIgn").value.trim(),
+          discord: $("#defDiscord").value.trim(),
+          servedDate: $("#servedDate").value
+        },
+        plaintiff: {
+          ign: $("#plaintiffIgn").value.trim(),
+          discord: $("#plaintiffDiscord").value.trim() || null
+        },
+        claim: { allegations: $("#allegations").value.trim() },
+        response: {
+          position,
+          narrative: $("#defResponse").value.trim(),
+          defenses: $("#defenses").value.trim()
+        },
+        evidence: {
+          types: defEvidenceTypes,
+          items: defEvidenceItems,
+          witnesses: defWitnesses
+        },
+        resolution: {
+          settlement,
+          outcomes,
+          counterSuit: counter,
+          counterExplain: $("#counterExplain").value.trim() || null
+        },
+        declaration: {
+          signature: $("#defSignature").value.trim(),
+          date: $("#defSignDate").value
+        }
+      };
 
-  lastDefense = {
-    recordId,
-    servedCaseId: servedId || null,
-    submittedAt: new Date().toISOString(),
-    defendant: {
-      ign: $("#defIgn").value.trim(),
-      discord: $("#defDiscord").value.trim(),
-      servedDate: $("#servedDate").value
-    },
-    plaintiff: {
-      ign: $("#plaintiffIgn").value.trim(),
-      discord: $("#plaintiffDiscord").value.trim() || null
-    },
-    claim: { allegations: $("#allegations").value.trim() },
-    response: {
-      position,
-      narrative: $("#defResponse").value.trim(),
-      defenses: $("#defenses").value.trim()
-    },
-    evidence: {
-      types: defEvidenceTypes,
-      items: defEvidenceItems,
-      witnesses: defWitnesses
-    },
-    resolution: {
-      settlement,
-      outcomes,
-      counterSuit: counter,
-      counterExplain: $("#counterExplain").value.trim() || null
-    },
-    declaration: {
-      signature: $("#defSignature").value.trim(),
-      date: $("#defSignDate").value
-    }
-  };
+      const doc = buildDefendantDoc(lastDefense);
+      $("#output").textContent = doc;
 
-  $("#output").textContent = JSON.stringify(lastDefense, null, 2);
+      lastDocText = doc;
+      lastDocLabel = "Defendant";
 
-  // Track last payload for manual webhook send
-  lastPayload = lastDefense;
-  lastPayloadLabel = "Defendant";
+      show($("#defSuccessBox"), "Submitted. Copy the document, download it, or send it to Discord.");
+      outputMovedToBottom = true;
+      syncOutputPlacement();
+      requestAnimationFrame(scrollBubbleIntoView);
 
-  show($("#defSuccessBox"), "Submitted. Copy the JSON, download it, or send it to Discord.");
-  outputMovedToBottom = true;
-  syncOutputPlacement();
-  requestAnimationFrame(scrollBubbleIntoView);
-
-  // Auto-send to Discord if enabled
-  if ($("#autoWebhook").checked) {
-    await sendToDiscordWebhook(lastDefense, recordId, "Defendant", $("#defSuccessBox"));
-  }
-});
+      // Auto-send to Discord if enabled
+      if ($("#autoWebhook").checked) {
+        await sendToDiscordWebhook(doc, recordId, "Defendant", $("#defSuccessBox"));
+      }
+    });
 
     // Manual send to Discord
     $("#webhookBtn").addEventListener("click", async () => {
@@ -1663,7 +1668,7 @@ $("#defendantForm").addEventListener("submit", async (ev) => {
       hide($("#errorBox"));
       hide($("#defErrorBox"));
 
-      if (!lastPayload) {
+      if (!lastDocText) {
         show(statusEl, "Nothing to send yet. Submit a form first.");
         statusEl.classList.remove("success");
         statusEl.classList.add("error");
@@ -1675,10 +1680,10 @@ $("#defendantForm").addEventListener("submit", async (ev) => {
       const pillId = $("#caseId").textContent;
       const filenameBase = pillId && pillId !== "Not submitted" ? pillId : randomId();
 
-      await sendToDiscordWebhook(lastPayload, filenameBase, lastPayloadLabel || "Submission", statusEl);
+      await sendToDiscordWebhook(lastDocText, filenameBase, lastDocLabel || "Submission", statusEl);
     });
 
-    // Copy/download/mailto buttons
+    // Copy/download buttons
     $("#copyBtn").addEventListener("click", async () => {
       const text = $("#output").textContent;
       const plaintiffVisible = $("#intakeForm").style.display !== "none";
@@ -1688,16 +1693,17 @@ $("#defendantForm").addEventListener("submit", async (ev) => {
         await navigator.clipboard.writeText(text);
         show(okEl, "Copied to clipboard.");
       }catch(e){
-        show(badEl, "Copy failed. Select the JSON and copy manually like it’s 2009.");
+        show(badEl, "Copy failed. Highlight the doc and do it the old-fashioned way.");
       }
     });
 
     $("#downloadBtn").addEventListener("click", () => {
       const text = $("#output").textContent;
-      const id = $("#caseId").textContent.includes("VR-") ? $("#caseId").textContent : "vinterra-case";
-      downloadText(`${id}.json`, text);
+      const pillId = $("#caseId").textContent;
+      const id = pillId && pillId !== "Not submitted" ? pillId : "vinterra-case";
+      downloadText(`${id}.txt`, text);
       const plaintiffVisible = $("#intakeForm").style.display !== "none";
-      show(plaintiffVisible ? $("#successBox") : $("#defSuccessBox"), "Downloaded JSON file.");
+      show(plaintiffVisible ? $("#successBox") : $("#defSuccessBox"), "Downloaded document.");
     });
 
   </script>
