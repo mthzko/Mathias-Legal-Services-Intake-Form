@@ -12,6 +12,8 @@
       --text:#e8edf2;
       --accent:#7c5cff;
       --accent2:#2dd4bf;
+      --bgGrad1: rgba(124,92,255,.18);
+      --bgGrad2: rgba(45,212,191,.12);
       --danger:#ef4444;
       --border:#222a3b;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
@@ -23,11 +25,13 @@
     body{
       margin:0;
       font-family:var(--sans);
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(124,92,255,.18), transparent 60%),
-                  radial-gradient(900px 500px at 90% 10%, rgba(45,212,191,.12), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, var(--bgGrad1), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, var(--bgGrad2), transparent 55%),
+        var(--bg);
       color:var(--text);
       line-height:1.4;
+      transition: background 250ms ease;
     }
     .wrap{
       max-width: 980px;
@@ -257,10 +261,165 @@
       color: var(--text);
       display:inline-block;
     }
+
+    /* Theme swapping (still dark mode, just different vibes) */
+    body.theme-plaintiff{
+      --accent:#7c5cff;
+      --accent2:#2dd4bf;
+      --bgGrad1: rgba(124,92,255,.18);
+      --bgGrad2: rgba(45,212,191,.12);
+    }
+
+    body.theme-defendant{
+      --accent:#ef4444;
+      --accent2:#60a5fa;
+      --bgGrad1: rgba(239,68,68,.16);
+      --bgGrad2: rgba(96,165,250,.12);
+    }
+
+    /* Fullscreen "mode picker" overlay */
+    .mode-overlay{
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(11,13,18,.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 1;
+      transition: opacity 220ms ease;
+    }
+
+    .mode-overlay.hidden{
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .mode-card{
+      width: min(720px, 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .mode-card h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #dfe7ff;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .mode-card p{
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 70ch;
+    }
+
+    .mode-actions{
+      display: grid;
+      gap: 12px;
+    }
+
+    @media (min-width: 760px){
+      .mode-actions{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .mode-btn{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 14px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 140ms ease, border-color 140ms ease;
+    }
+
+    .mode-btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(124,92,255,.55);
+    }
+
+    .mode-btn .title{
+      font-weight: 800;
+      font-size: 14px;
+      display:block;
+      margin-bottom: 6px;
+    }
+
+    .mode-btn .desc{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      display:block;
+    }
+
+    .mode-btn.plaintiff{
+      background: linear-gradient(135deg, rgba(124,92,255,.25), rgba(45,212,191,.12));
+    }
+
+    .mode-btn.defendant{
+      background: linear-gradient(135deg, rgba(239,68,68,.22), rgba(96,165,250,.12));
+    }
+
+    .mode-footer{
+      margin-top: 14px;
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .ghost-link{
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .ghost-link:hover{ border-color: rgba(124,92,255,.55); }
   </style>
 </head>
 
 <body>
+  <div class="mode-overlay" id="modeOverlay" aria-modal="true" role="dialog">
+    <div class="mode-card">
+      <h2>Pick a form <span style="font-size:12px; color: var(--muted); font-weight:500;">(yes, like a cookie banner, but useful)</span></h2>
+      <p>
+        Choose what you’re here for. This sets the vibe, the colors, and which form is shown.
+        No, you can’t sue Taco here.
+      </p>
+
+      <div class="mode-actions">
+        <button type="button" class="mode-btn plaintiff" id="overlayPlaintiffBtn">
+          <span class="title">I want to sue</span>
+          <span class="desc">File a claim, submit evidence, list damages, demand emotional compensation.</span>
+        </button>
+
+        <button type="button" class="mode-btn defendant" id="overlayDefendantBtn">
+          <span class="title">I got sued</span>
+          <span class="desc">Respond to allegations, upload counter-evidence, choose outcomes, consider revenge litigation.</span>
+        </button>
+      </div>
+
+      <div class="mode-footer">
+        <span>Tip: You can switch tabs later. This just makes you pick something first.</span>
+        <button type="button" class="ghost-link" id="overlayCloseBtn">Skip</button>
+      </div>
+    </div>
+  </div>
   <div class="wrap">
     <header>
       <div>
@@ -291,7 +450,7 @@
         <button type="button" id="downloadBtn">Download .json</button>
         <button type="button" id="webhookBtn">Send to Discord</button>
         <label class="muted" style="display:inline-flex; gap:8px; align-items:center;">
-          <input type="checkbox" id="autoWebhook" checked/> Auto-send on submit
+          <input type="checkbox" id="autoWebhook" checked /> Auto-send on submit
         </label>
         <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
       </div>
@@ -684,6 +843,7 @@
     // Helpers
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+    document.body.classList.add("theme-plaintiff");
 
     function randomId() {
       // "VR-" + date + random. It's not serious, it just looks official.
@@ -838,6 +998,10 @@ function setTab(which) {
   $("#intakeForm").style.display = isPlaintiff ? "block" : "none";
   $("#defendantForm").style.display = isPlaintiff ? "none" : "block";
 
+  // Swap theme (still dark mode)
+  document.body.classList.toggle("theme-plaintiff", isPlaintiff);
+  document.body.classList.toggle("theme-defendant", !isPlaintiff);
+
   if (isPlaintiff) {
     tabPlaintiff.classList.add("primary");
     tabDefendant.classList.remove("primary");
@@ -849,6 +1013,45 @@ function setTab(which) {
 
 tabPlaintiff.addEventListener("click", () => setTab("plaintiff"));
 tabDefendant.addEventListener("click", () => setTab("defendant"));
+
+// Fullscreen mode picker overlay
+const modeOverlay = $("#modeOverlay");
+const overlayPlaintiffBtn = $("#overlayPlaintiffBtn");
+const overlayDefendantBtn = $("#overlayDefendantBtn");
+const overlayCloseBtn = $("#overlayCloseBtn");
+
+function hideOverlay() {
+  modeOverlay.classList.add("hidden");
+  // Fully remove from layout after fade
+  setTimeout(() => { modeOverlay.style.display = "none"; }, 260);
+}
+
+overlayPlaintiffBtn.addEventListener("click", () => {
+  setTab("plaintiff");
+  hideOverlay();
+});
+
+overlayDefendantBtn.addEventListener("click", () => {
+  setTab("defendant");
+  hideOverlay();
+});
+
+overlayCloseBtn.addEventListener("click", () => {
+  // Default to plaintiff if they refuse to choose
+  setTab("plaintiff");
+  hideOverlay();
+});
+
+// Allow ESC to skip
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && modeOverlay.style.display !== "none") {
+    setTab("plaintiff");
+    hideOverlay();
+  }
+});
+
+// On load, show overlay and ensure correct initial tab styling
+setTab("plaintiff");
 
     // Start with one input each (people forget otherwise)
     addListItem(evidenceList, "Evidence link or description...", "evidence");
