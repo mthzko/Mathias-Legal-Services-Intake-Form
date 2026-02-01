@@ -292,6 +292,20 @@
       display:inline-block;
     }
 
+    /* Document-style output (what users actually see/send) */
+    .doc{
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: var(--sans);
+}
+
     /* Theme swapping (still dark mode, just different vibes) */
     body.theme-plaintiff{
       --accent:#7c5cff;
@@ -483,7 +497,7 @@
         </label>
         <span class="muted">Copy: <span class="kbd">Ctrl</span>+<span class="kbd">C</span> works too.</span>
       </div>
-      <pre id="output">{ "status": "Not submitted yet." }</pre>
+      <div id="output" class="doc">No submission yet.</div>
       <div class="footer-note">
         Note: This JSON is your official submission record. Keep a copy for yourself.
       </div>
@@ -700,12 +714,15 @@
     </div>
 
     <div class="grid two" style="margin-top:12px;">
-      <div>
-        <label for="servedDate">Date you were served *</label>
-        <input id="servedDate" name="servedDate" type="date" required />
-      </div>
-    </div>
+  <div>
+    <label for="suedCaseId">Case ID you were served (if known)</label>
+    <input id="suedCaseId" name="suedCaseId" type="text" placeholder="e.g., VR-20260201-ABC123" />
   </div>
+  <div>
+    <label for="servedDate">Date you were served *</label>
+    <input id="servedDate" name="servedDate" type="date" required />
+  </div>
+</div>
 
   <!-- DEFENDANT FORM: Section 2 -->
   <div class="section">
@@ -928,7 +945,7 @@
     }
 
     function downloadText(filename, text) {
-      const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -942,14 +959,43 @@
     // Discord webhook (CLIENT-SIDE WARNING: please don't abuse this volnerability inspect element wizards)
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1467289266391613472/iWFehe7bhU6W8x6ZOt6BlAcLzyUO3H32Ia4yj2-5GO_UOVvVYFWxLk6Q1ZbaNgDi770m";
 
-    async function sendToDiscordWebhook(payloadObj, filenameBase, contextLabel, statusEl) {
-      if (!DISCORD_WEBHOOK_URL) {
-        show(statusEl, "Discord webhook not configured. Ask Mathias to paste the webhook URL into the site code.");
-        statusEl.classList.remove("success");
-        statusEl.classList.add("error");
-        statusEl.style.display = "block";
-        return;
-      }
+    async function sendToDiscordWebhook(docText, filenameBase, contextLabel, statusEl) {
+  if (!DISCORD_WEBHOOK_URL) {
+    show(statusEl, "Discord webhook not configured. Ask Mathias to paste the webhook URL into the site code.");
+    statusEl.classList.remove("success");
+    statusEl.classList.add("error");
+    statusEl.style.display = "block";
+    return;
+  }
+
+  try {
+    const fileBlob = new Blob([docText], { type: "text/plain" });
+    const form = new FormData();
+
+    const content = `${contextLabel} submission received: ${filenameBase}`;
+    form.append("payload_json", JSON.stringify({ content }));
+
+    form.append("files[0]", fileBlob, `${filenameBase}.txt`);
+
+    const res = await fetch(DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      body: form
+    });
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`Discord webhook failed (${res.status}). ${text}`);
+    }
+
+    statusEl.classList.remove("error");
+    statusEl.classList.add("success");
+    show(statusEl, "Sent to Discord.");
+  } catch (err) {
+    statusEl.classList.remove("success");
+    statusEl.classList.add("error");
+    show(statusEl, `Discord send failed: ${err.message}`);
+  }
+}
 
       try {
         const json = JSON.stringify(payloadObj, null, 2);
@@ -983,7 +1029,6 @@
         statusEl.classList.add("error");
         show(statusEl, `Discord send failed: ${err.message}`);
       }
-    }
 
     // Init
     const evidenceList = $("#evidenceList");
@@ -1267,20 +1312,139 @@ $("#defResetBtn").addEventListener("click", () => {
         }
       };
 
-      const json = JSON.stringify(lastSubmission, null, 2);
-      $("#output").textContent = json;
+      const doc = buildPlaintiffDoc(lastSubmission);
+$("#output").textContent = doc;
 
-      // Track last payload for manual webhook send
-      lastPayload = lastSubmission;
-      lastPayloadLabel = "Plaintiff";
+lastDocText = doc;
+lastDocLabel = "Plaintiff";
 
-      show($("#successBox"), "Submitted. Copy the JSON, download it, or send it to Discord.");
+      show($("#successBox"), "Submitted. Copy the document, download it, or send it to Discord.");
 
       // Auto-send to Discord if enabled
       if ($("#autoWebhook").checked) {
-        await sendToDiscordWebhook(lastSubmission, caseId, "Plaintiff", $("#successBox"));
+        await sendToDiscordWebhook(doc, caseId, "Plaintiff", $("#successBox"));
       }
     });
+
+    function fmtList(arr) {
+  if (!arr || arr.length === 0) return "(none)";
+  return arr.map((x, i) => `${i + 1}. ${x}`).join("\n");
+}
+
+function buildPlaintiffDoc(s) {
+  const end = s.case.incident.endDate ? ` to ${s.case.incident.endDate}` : "";
+  return [
+    "VINTERRA SMP – LEGAL INTAKE (PLAINTIFF)",
+    "====================================",
+    `Case ID: ${s.caseId}`,
+    `Submitted: ${new Date(s.submittedAt).toLocaleString()}`,
+    "",
+    "CLIENT",
+    "------",
+    `IGN: ${s.client.ign}`,
+    `Discord: ${s.client.discord}`,
+    `Affected party: ${s.client.affectedParty ? "Yes" : "No"}`,
+    s.client.relationshipExplain ? `Connection: ${s.client.relationshipExplain}` : null,
+    "",
+    "DEFENDANT",
+    "---------",
+    `IGN: ${s.defendant.ign}`,
+    s.defendant.alts ? `Other involved: ${s.defendant.alts}` : null,
+    "",
+    "CASE SUMMARY",
+    "------------",
+    `Types: ${s.case.types.join(", ")}`,
+    `Date(s): ${s.case.incident.startDate}${end}`,
+    `Location: ${s.case.incident.location}`,
+    "",
+    "DESCRIPTION",
+    "-----------",
+    s.case.incident.description,
+    "",
+    "EVIDENCE",
+    "--------",
+    `Evidence types: ${s.case.evidence.types.length ? s.case.evidence.types.join(", ") : "(none selected)"}`,
+    "Evidence items:",
+    fmtList(s.case.evidence.items),
+    "",
+    "WITNESSES",
+    "---------",
+    fmtList(s.case.witnesses),
+    "",
+    "DAMAGES",
+    "-------",
+    s.case.damages,
+    "",
+    "REQUESTED OUTCOME",
+    "-----------------",
+    fmtList(s.case.remedies),
+    "",
+    "ADDITIONAL NOTES",
+    "----------------",
+    s.case.notes || "(none)",
+    "",
+    "DECLARATION",
+    "-----------",
+    `Signed by: ${s.declaration.signature}`,
+    `Date: ${s.declaration.date}`
+  ].filter(Boolean).join("\n");
+}
+
+function buildDefendantDoc(d) {
+  return [
+    "VINTERRA SMP – LEGAL INTAKE (DEFENDANT)",
+    "====================================",
+    `Record ID: ${d.recordId}`,
+    d.servedCaseId ? `Served Case ID: ${d.servedCaseId}` : null,
+    `Submitted: ${new Date(d.submittedAt).toLocaleString()}`,
+    "",
+    "DEFENDANT",
+    "---------",
+    `IGN: ${d.defendant.ign}`,
+    `Discord: ${d.defendant.discord}`,
+    `Served date: ${d.defendant.servedDate}`,
+    "",
+    "PLAINTIFF",
+    "---------",
+    `IGN: ${d.plaintiff.ign}`,
+    d.plaintiff.discord ? `Discord: ${d.plaintiff.discord}` : null,
+    "",
+    "ALLEGATIONS",
+    "----------",
+    d.claim.allegations,
+    "",
+    "RESPONSE",
+    "--------",
+    `Position: ${d.response.position}`,
+    "",
+    d.response.narrative,
+    "",
+    "DEFENSES",
+    "--------",
+    d.response.defenses,
+    "",
+    "EVIDENCE",
+    "--------",
+    `Evidence types: ${d.evidence.types.length ? d.evidence.types.join(", ") : "(none selected)"}`,
+    "Evidence items:",
+    fmtList(d.evidence.items),
+    "Witnesses:",
+    fmtList(d.evidence.witnesses),
+    "",
+    "RESOLUTION",
+    "----------",
+    `Settlement: ${d.resolution.settlement}`,
+    "Preferred outcomes:",
+    fmtList(d.resolution.outcomes),
+    `Countersuit: ${d.resolution.counterSuit}`,
+    d.resolution.counterExplain ? `Countersuit notes: ${d.resolution.counterExplain}` : null,
+    "",
+    "DECLARATION",
+    "-----------",
+    `Signed by: ${d.declaration.signature}`,
+    `Date: ${d.declaration.date}`
+  ].filter(Boolean).join("\n");
+}
 
     // Defendant submit
 let lastDefense = null;
