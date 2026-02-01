@@ -787,6 +787,7 @@
         </div>
       </div>
     </form>
+    <div id="outputBottomPlaintiff"></div>
 
     <form id="defendantForm" novalidate style="display:none; margin-top:16px;">
   <!-- DEFENDANT FORM: Section 1 -->
@@ -974,7 +975,7 @@
     </div>
   </div>
 </form>
-    <div id="outputBottomAnchor"></div>
+    <div id="outputBottomDefendant"></div>
   </div>
 
   <script>
@@ -985,15 +986,18 @@
 
     const outputBubble = document.querySelector(".output-bubble");
     const outputTopAnchor = document.getElementById("outputTopAnchor");
-    const outputBottomAnchor = document.getElementById("outputBottomAnchor");
+    const outputBottomPlaintiff = document.getElementById("outputBottomPlaintiff");
+    const outputBottomDefendant = document.getElementById("outputBottomDefendant");
     const smallScreenQuery = window.matchMedia("(max-width: 1200px)");
     let outputMovedToBottom = false;
 
     function syncOutputPlacement() {
-      if (!outputBubble || !outputTopAnchor || !outputBottomAnchor) return;
+      if (!outputBubble || !outputTopAnchor) return;
+      const plaintiffVisible = $("#intakeForm").style.display !== "none";
+      const activeBottomAnchor = plaintiffVisible ? outputBottomPlaintiff : outputBottomDefendant;
       if (smallScreenQuery.matches) {
         if (outputMovedToBottom) {
-          outputBottomAnchor.appendChild(outputBubble);
+          if (activeBottomAnchor) activeBottomAnchor.appendChild(outputBubble);
         } else {
           outputTopAnchor.appendChild(outputBubble);
         }
@@ -1091,7 +1095,7 @@
     const fileBlob = new Blob([docText], { type: "text/plain" });
     const form = new FormData();
 
-    const content = `@mthzko ${contextLabel} submission received: ${filenameBase}`;
+    const content = `${contextLabel} submission received: ${filenameBase}`;
     form.append("payload_json", JSON.stringify({ content }));
 
     form.append("files[0]", fileBlob, `${filenameBase}.txt`);
@@ -1175,6 +1179,7 @@ function setTab(which) {
     tabPlaintiff.classList.remove("primary");
     tabPlaintiff.classList.remove("primary-defendant");
   }
+  syncOutputPlacement();
 }
 
 tabPlaintiff.addEventListener("click", () => setTab("plaintiff"));
