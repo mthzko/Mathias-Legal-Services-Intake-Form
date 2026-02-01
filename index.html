@@ -185,6 +185,36 @@
       border-color: transparent;
       color:#091019;
     }
+
+    /* Scary/defendant button style */
+    .primary-defendant{
+      background: linear-gradient(135deg, rgba(239,68,68,.95), rgba(96,165,250,.75));
+      border-color: transparent;
+      color:#091019;
+      box-shadow:
+        0 0 0 2px rgba(239,68,68,.18),
+        0 10px 30px rgba(0,0,0,.35),
+        0 0 18px rgba(239,68,68,.22);
+    }
+
+    .primary-defendant:hover{
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 2px rgba(239,68,68,.28),
+        0 14px 34px rgba(0,0,0,.38),
+        0 0 26px rgba(239,68,68,.32);
+    }
+
+    /* Make the inactive defendant tab still look a bit ominous */
+    #tabDefendant{
+      border-color: rgba(239,68,68,.45);
+      background: rgba(239,68,68,.08);
+      color: #ffd7d7;
+    }
+
+    #tabDefendant:hover{
+      border-color: rgba(239,68,68,.70);
+    }
     .danger{
       border-color: rgba(239,68,68,.45);
       color: #ffd7d7;
@@ -432,7 +462,7 @@
   <button type="button" id="tabPlaintiff" class="primary" style="padding:8px 12px; border-radius:999px;">
     I want to sue
   </button>
-  <button type="button" id="tabDefendant" style="padding:8px 12px; border-radius:999px;">
+  <button type="button" id="tabDefendant" style="padding:8px 12px; border-radius:999px; font-weight:800;">
     I got sued
   </button>
 
@@ -1003,10 +1033,16 @@ function setTab(which) {
 
   if (isPlaintiff) {
     tabPlaintiff.classList.add("primary");
+    tabPlaintiff.classList.remove("primary-defendant");
+
     tabDefendant.classList.remove("primary");
+    tabDefendant.classList.remove("primary-defendant");
   } else {
-    tabDefendant.classList.add("primary");
+    tabDefendant.classList.add("primary-defendant");
+    tabDefendant.classList.remove("primary");
+
     tabPlaintiff.classList.remove("primary");
+    tabPlaintiff.classList.remove("primary-defendant");
   }
 }
 
